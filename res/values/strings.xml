@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">solo-voleibol</string>
+    <string name="players">Players</string>
 
 </resources>

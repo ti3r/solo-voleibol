@@ -8,5 +8,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/hello" />
-
+    
+    <fragment class="org.blanco.solovolei.fragments.PlayersListFragment"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+     
 </LinearLayout>
