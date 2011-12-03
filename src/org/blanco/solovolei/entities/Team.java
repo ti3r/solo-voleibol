@@ -1,5 +1,9 @@
 package org.blanco.solovolei.entities;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 
 /**
  * Entity class that will represent one team in the database
@@ -9,9 +13,12 @@ package org.blanco.solovolei.entities;
  * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
  *
  */
+@DatabaseTable(tableName="TEAMS")
 public class Team {
 	
+	@DatabaseField(dataType=DataType.INTEGER, generatedId=true,columnName="_id")
 	private int id;
+	@DatabaseField(dataType=DataType.STRING)
 	private String name;
 	
 	

@@ -15,7 +15,5 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <provider android:authorities="org.blanco.solovolei"
-            android:label="SoloVoleiContentProvider" android:name="org.blanco.solovolei.providers.SoloVoleiContentProvider"/>
     </application>
 </manifest>
