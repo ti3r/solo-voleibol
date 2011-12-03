@@ -12,13 +12,13 @@ import com.j256.ormlite.support.ConnectionSource;
 
 public class SoloVoleiSQLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 
+	/** The name of the database that will be used in the app */
 	private static final String DB_NAME = "solo_volei.db";
 	
-	Context ctx = null;
+	
 	public SoloVoleiSQLiteOpenHelper(Context context,
 			CursorFactory factory, int version) {
 		super(context, DB_NAME, factory, version);
-		ctx = context;
 	}
 
 	/**
@@ -65,8 +65,7 @@ public class SoloVoleiSQLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase ds, ConnectionSource cs, int from,
 			int to) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("No upgrade process is supported yet");
 	}
 	
 }

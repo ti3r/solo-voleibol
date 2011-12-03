@@ -19,10 +19,6 @@ import com.j256.ormlite.dao.DaoManager;
  *
  */
 public class DaoFactory {
-
-	enum SOLO_VOLEI_DAOS{
-		PLAYERS
-	}
 	
 	/**
 	 * The single SQLiteOpenHelper class used in the application 
@@ -40,13 +36,13 @@ public class DaoFactory {
 		}
 		try {
 			Dao<?,?> result = 
-			DaoManager.createDao(helper.getConnectionSource(), clas);
-			//Dao d = DaoManager.lookupDao(helper.getConnectionSource(), object.getClass());
-			//if (d == null){
+			//DaoManager.createDao(helper.getConnectionSource(), clas);
+			DaoManager.lookupDao(helper.getConnectionSource(), clas);
+			if (result == null){
 				//then create the dao and register it
-				//d = DaoManager.createDao(helper.getConnectionSource(), objectClass.getClass());
-				//DaoManager.registerDao(helper.getConnectionSource(), d);
-			//}
+				result = DaoManager.createDao(helper.getConnectionSource(), clas);
+				DaoManager.registerDao(helper.getConnectionSource(), result);
+			}
 			return result;
 		} catch (SQLException e) {
 			Log.e(MainActivity.TAG, "Error looking up for dao to manage: "

@@ -9,7 +9,10 @@
         android:layout_height="wrap_content"
         android:text="@string/hello" />
     
+    <fragment class="org.blanco.solovolei.fragments.TeamsAddFragment"
+        android:id="@+id/main_teams_add_fragment"
+        android:layout_width="wrap_content" android:layout_height="150dip"/>
     <fragment class="org.blanco.solovolei.fragments.TeamsListFragment"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-     
+        android:id="@+id/main_teams_list_fragment"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
 </LinearLayout>
