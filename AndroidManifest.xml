@@ -9,8 +9,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:label="@string/app_name" android:name=".MockActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <provider android:authorities="org.blanco.solovolei"
             android:label="SoloVoleiContentProvider" android:name="org.blanco.solovolei.providers.SoloVoleiContentProvider"/>
-        <provider android:authorities="org.blanco.solovolei" android:name="org.blanco.solovolei.providers.SoloVoleiContentProvider2"/>
     </application>
 </manifest>

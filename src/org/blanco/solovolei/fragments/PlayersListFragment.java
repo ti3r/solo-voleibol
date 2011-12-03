@@ -1,12 +1,28 @@
 package org.blanco.solovolei.fragments;
 
-import org.blanco.solovolei.providers.Teams;
+import java.sql.SQLException;
+import java.util.List;
 
-import android.database.Cursor;
+import org.blanco.solovolei.MainActivity;
+import org.blanco.solovolei.entities.Player;
+import org.blanco.solovolei.providers.dao.DaoFactory;
+
+import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.widget.ArrayAdapter;
+import android.util.Log;
+
+import com.j256.ormlite.dao.Dao;
 
 public class PlayersListFragment extends ListFragment {
+	
+	Dao<Player, Long> dao = null;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		dao = (Dao<Player, Long>) DaoFactory.getDao(getActivity(), Player.class);
+		super.onCreate(savedInstanceState);
+	}
 
 	@Override
 	public void onStart() {
@@ -24,14 +40,15 @@ public class PlayersListFragment extends ListFragment {
 	
 	
 	public void findPlayersAndPopulateList(){
-		Cursor c = getActivity().managedQuery(Teams.CONTENT_URI, 
-				null, null, null, null);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
-		while(c!= null && c.moveToNext()){
-			String nombre = c.getString(c.getColumnIndex("nombre"));
-			adapter.add(nombre);
+		
+		try {
+			List<Player> players = (List<Player>) dao.queryForAll();
+			Log.d("alog", "Players count: "+players.size());
+		} catch (SQLException e) {
+			Log.e(MainActivity.TAG, "Error retrieving the players");
 		}
-		setListAdapter(adapter);
+		
+		
 	}
 	
 	
