@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
@@ -28,8 +29,12 @@ import com.j256.ormlite.dao.Dao;
 
 public class TeamsListFragment extends ListFragment {
 
+	/** The dao that will be used by the fragment */ 
 	Dao<Team, Long> teamsDao = null;
-	TeamItemSelectionListener selectListener = null;
+	/** The item selected listener associated with the fragment */
+	TeamsListItemSelectedListener commandsListener = null;
+	/** The item deleted listener associated with the fragment */
+	TeamsListDeleteItemListener deleteListener = null;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -47,14 +52,14 @@ public class TeamsListFragment extends ListFragment {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
-				if (selectListener != null)
-					selectListener.onTeamItemSelected((getListAdapter() != null)?
+				if (commandsListener != null)
+					commandsListener.onTeamItemSelected((getListAdapter() != null)?
 							(Team) getListAdapter().getItem(arg2): null);
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				if (selectListener != null)
-					selectListener.onTeamItemSelected(null);
+				if (commandsListener != null)
+					commandsListener.onTeamItemSelected(null);
 			}
 		});
 		registerForContextMenu(getListView());
@@ -67,9 +72,20 @@ public class TeamsListFragment extends ListFragment {
 	 * @param listener The TeamItemSelectionListener listener that will be 
 	 * associated with this fragment
 	 */
-	public void setSelectListener(TeamItemSelectionListener listener){
-		selectListener = listener;
+	public void setSelectListener(TeamsListItemSelectedListener listener){
+		commandsListener = listener;
 	}
+	/**
+	 * Sets the listener class that will execute calls when different delete
+	 * events arise within the fragment.
+	 * 
+	 * @param listener The TeamsListDeleteItemsListener listener that will be
+	 * associated with this fragment.
+	 */
+	public void setDeleteListener(TeamsListDeleteItemListener listener){
+		deleteListener = listener;
+	}
+	
 	/**
 	 * Re-populates the list of items in this fragment. 
 	 */
@@ -120,21 +136,31 @@ public class TeamsListFragment extends ListFragment {
 	 */
 	private void deleteTeamItem(MenuItem item) {
 		if (getListAdapter() != null){
-			//TODO replace this item number with the actual number of the selected item.
-			Team t = (Team)getListAdapter().getItem(0);
-			try {
-				teamsDao.delete(t);
-				refreshList();
-			} catch (SQLException e) {
-				Log.e(TAG, "Dao Delete operation failed.",e);
+			final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			if (info != null){
+				Team t = (Team)getListAdapter().getItem(info.position);
+				if (this.deleteListener == null || this.deleteListener.onTeamItemPreDelete(t)){
+					//Call the onTeamItemPreDelete if set in order to know if continue or not with the delete
+					try {
+						teamsDao.delete(t);
+						refreshList();
+						if (this.deleteListener != null) //send the signal to the exterior (item deleted)
+							this.deleteListener.onTeamItemPostDelete(t);
+					} catch (SQLException e) {
+						Log.e(TAG, "Dao Delete operation failed.",e);
+						if (this.deleteListener != null) //Call the exterior to communicate the error
+							this.deleteListener.onTeamItemDeleteError(t, e);
+					}
+				}else{
+					Log.d(TAG, "Delete cancelled by onTeamItemPreDelete");
+				}
+			}else{
+				Log.d(TAG, "Unable to determine the position of the item to delete. AdapterContextMenuInfo null");
 			}
 		}else{
-			Log.d(TAG, "The Adapter is set to null delete command will be ignored");
+			Log.d(TAG, "deleteTeamItem - The Adapter is set to null delete command will be ignored");
 		}
 	}
-
-
-
 
 	/**
 	 * Interface that will handle the select events occurred with the teams
@@ -142,9 +168,51 @@ public class TeamsListFragment extends ListFragment {
 	 * 
 	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>	
 	 */
-	interface TeamItemSelectionListener{
+	interface TeamsListItemSelectedListener{
+		/**
+		 * The method that will be executed when one item has been selected from
+		 * the list.
+		 * @param item The Team item selected from the list
+		 */
 		public void onTeamItemSelected(Team item);
+		/**
+		 * The method that will be executed when the edit command has been launched
+		 * for one item of the list.
+		 * @param item The Team item selected from the list.
+		 */
+		public void onTeamItemEditionStarted(Team item);
 	}
+	
+	/**
+	 * Interface that will handle the delete events ocurred within the fragment
+	 * 
+	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+	 */
+	interface TeamsListDeleteItemListener{
+		/**
+		 * The method that will be executed before one Team item is deleted
+		 * from the list.
+		 * @param team The Team item that will be deleted
+		 * @return True if everything is ok and the delete command should 
+		 * continue, False otherwise.
+		 */
+		public boolean onTeamItemPreDelete(Team team);
+		/**
+		 * The method that will be executed after one Team item has been 
+		 * deleted from the list.
+		 * @param team The Team item that was deleted
+		 */
+		public void onTeamItemPostDelete(Team team);
+		/**
+		 * The method that will be executed if the delete command fails
+		 * on one item of the list.
+		 * @param team The Team item that attempted to be deleted
+		 * @param e The Exception that show up during the delete command.
+		 */
+		public void onTeamItemDeleteError(Team team, Exception e);
+	}
+	
+	
 	/**
 	 * The async task that will load the teams build the adapter and populate
 	 * the teams list.

@@ -26,7 +26,7 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onStart() {
 		FragmentManager m = getSupportFragmentManager();
-		final TeamsListFragment f = (TeamsListFragment) m.findFragmentById(R.id.main_teams_list_fragment);
+		final TeamsListFragment f = (TeamsListFragment) m.findFragmentById(R.id.main_teams_list_fragment);		
 		TeamsAddFragment fa = (TeamsAddFragment) m.findFragmentById(R.id.main_teams_add_fragment);
 		fa.setListener(new TeamsAddFragment.TeamsAddListener() {
 			
