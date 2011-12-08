@@ -36,6 +36,9 @@ public class TeamsListFragment extends ListFragment {
 	/** The item deleted listener associated with the fragment */
 	TeamsListDeleteItemListener deleteListener = null;
 	
+	/** variable to enable/disable the delete process in the fragment */
+	boolean deleteEnabled = true;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,27 @@ public class TeamsListFragment extends ListFragment {
 	}
 	
 	/**
+	 * Gets the boolean value of the deleteEnabled property of the fragment in 
+	 * order to know if the delete option is enabled.
+	 * Default value is true (enabled)
+	 * @return boolean value with the value of the deleteEnabled property
+	 */
+	public boolean isDeleteEnabled() {
+		return deleteEnabled;
+	}
+	/**
+	 * Sets the boolean value of the deleteEnabled property of the fragment in
+	 * order to enable/disable the delete option.
+	 * If this property is set the fragment must be restarted in order to reflect
+	 * the change.
+	 * @param deleteEnabled The boolean value to be set in the deleteEnabled 
+	 * property of the fragment
+	 */
+	public void setDeleteEnabled(boolean deleteEnabled) {
+		this.deleteEnabled = deleteEnabled;
+	}
+
+	/**
 	 * Re-populates the list of items in this fragment. 
 	 */
 	public void refreshList(){
@@ -109,8 +133,10 @@ public class TeamsListFragment extends ListFragment {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		MenuInflater inflater = new MenuInflater(getActivity());
-		inflater.inflate(R.menu.delete_update_ctx_menu, menu);
+		if (deleteEnabled){
+			MenuInflater inflater = new MenuInflater(getActivity());
+			inflater.inflate(R.menu.deelete_ctx_menu, menu);
+		}
 	}
 	
 	@Override
@@ -119,8 +145,6 @@ public class TeamsListFragment extends ListFragment {
 		case R.id.delete_update_ctx_menu_delete_item:
 			Log.d(TAG, "delete option was selected from the context menu");
 			deleteTeamItem(item);
-			return true;
-		case R.id.delete_update_ctx_menu_update_item:
 			return true;
 		default:
 			return false;
