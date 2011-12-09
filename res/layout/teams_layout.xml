@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/teams_layout_txt_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/teams_management"
+        android:gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <ImageButton android:id="@+id/teams_layout_btn_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true" android:padding="5dip"
+        android:layout_toRightOf="@id/teams_layout_txt_header"
+        android:src="@android:drawable/ic_input_add"
+        />
+	<!-- Starts the fragments container with the list of teams at the start of the Activity -->
+    <fragment class="org.blanco.solovolei.fragments.TeamsListFragment"
+        android:id="@+id/teams_layout_fragment_container"
+        android:layout_below="@id/teams_layout_txt_header"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+</RelativeLayout>

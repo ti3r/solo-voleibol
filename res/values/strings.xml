@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">solo-voleibol</string>
     <string name="players">Players</string>
@@ -10,5 +9,5 @@
     <string name="accept">Accept</string>
     <string name="delete">Delete</string>
     <string name="update">update</string>
-
+    <string name="teams_management">Teams Management</string>
 </resources>
