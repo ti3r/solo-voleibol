@@ -6,8 +6,10 @@ import java.sql.SQLException;
 
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Team;
+import org.blanco.solovolei.fragments.TeamsListFragment.TeamsListCommandsListener;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -47,23 +49,36 @@ public class TeamsEditFragment extends Fragment {
 		teamsDao = (Dao<Team, Long>) DaoFactory.getDao(getActivity(), Team.class);
 		super.onCreate(savedInstanceState);
 	}
-
-
-
+	/**
+	 * Set the Team object to be edited and persisted to the database.
+	 * 
+	 * @param team The Team object to be edited by the fragment
+	 */
 	public void setTeam(Team team){
 		this.team = team;
 	}
-
+	/**
+	 * Sets the listener that will handle the results of the edit
+	 * process
+	 * @param listener The TeamsEditListener listener that will handle
+	 * the results of the edit process
+	 */
 	public void setTeamsEditListener(TeamsEditListener listener){
 		this.listener = listener;
 	}
 
+	/**
+	 * On create view of the fragment, it build the view needed to present
+	 * the Team object associated with the fragment and the controls
+	 * launch the edit process.
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.teams_edit_layout, null);
 		//establish the links of the controls
 		txtName = (EditText) v.findViewById(R.id.teams_edit_edt_name);
+		txtName.setText(team.getName());
 		accept = (Button) v.findViewById(R.id.teams_edit_btn_accept);
 		accept.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -75,20 +90,51 @@ public class TeamsEditFragment extends Fragment {
 		cancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				clearFields();
+				cancelEdit();
 			}
 		});
 		return v;
 	}
 	
-	private void clearFields(){
-		txtName.getText().clear();
-	}
 	
+	/**
+	 * When the method is attached to the activity this should implement
+	 * TeamsEditListener Interface in order to be set as the listener of
+	 * the commands.
+	 */
+	@Override
+	public void onAttach(Activity activity) {
+		if(this.listener == null 
+				&& (!(activity instanceof TeamsListCommandsListener))){
+			throw new IllegalArgumentException("Attached activity does not implement " +
+					"TeamsEditListener in order to handle the results. " +
+					"Please implement this interface in passed activity or set the appropiate listener");
+		}
+		if (this.listener == null)
+			setTeamsEditListener((TeamsEditListener) activity);
+		super.onAttach(activity);
+	}
+	/**
+	 * The method that will be executed when the Edit process is 
+	 * cancelled. This passes the result to the TeamsEditListener
+	 * Appropriate method if set.
+	 */
+	private void cancelEdit(){
+		if (listener != null)
+			listener.onTeamItemEditCancelled();
+	}
+	/**
+	 * The method that will be executed when the Edit process is 
+	 * accepted. It executes the onTeamItemPreEdit method of the
+	 * set TeamsEditListener listener if set, then if the result
+	 * is positive it persists the new team on the database
+	 * and passes the results to the appropriate method of the 
+	 * listener.
+	 */
 	private void acceptEdit(){
 		team.setName(txtName.getText().toString());
 		try {
-			if (listener != null || listener.onTeamItemPreEdit(team))
+			if (listener == null || listener.onTeamItemPreEdit(team))
 				teamsDao.update(team);
 			if (listener != null)
 				listener.onTeamItemPostEdit(team);
@@ -110,5 +156,7 @@ public class TeamsEditFragment extends Fragment {
 		public void onTeamItemPostEdit(Team team);
 		
 		public void onTeamItemEditError(Team team, Exception e);
+		
+		public void onTeamItemEditCancelled();
 	}
 }

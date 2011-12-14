@@ -52,7 +52,8 @@ public class SoloVoleiSQLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 		String path = db.getPath();
 		Log.i(TAG,"Database will be created on path "+path);
 		try{
-			db.execSQL("CREATE TABLE TEAMS (_id  INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL);");
+			//TODO Make rom for the image contained in the Team Entity
+			db.execSQL("CREATE TABLE TEAMS (_id  INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL );");
 			db.execSQL("CREATE TABLE PLAYERS (_id  INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL,number INTEGER NOT NULL);");
 			db.execSQL("CREATE TABLE PLATER_OF_TEAM(_id INTEGER PRIMARY KEY AUTOINCREMENT, player_fk INTEGER, team_fk INTEGER);");
 			//copyBasicDataBase(path);

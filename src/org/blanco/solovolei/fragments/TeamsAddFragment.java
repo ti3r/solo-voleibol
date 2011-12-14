@@ -6,8 +6,10 @@ import java.sql.SQLException;
 
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Team;
+import org.blanco.solovolei.fragments.TeamsListFragment.TeamsListCommandsListener;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -44,7 +46,10 @@ public class TeamsAddFragment extends Fragment {
 		dao = (Dao<Team, Long>) DaoFactory.getDao(getActivity(), Team.class);
 		super.onCreate(savedInstanceState);
 	}
-
+	/**
+	 * Creates the view to be displayed ot the user in order to create a new
+	 * team in the database.
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -160,6 +165,24 @@ public class TeamsAddFragment extends Fragment {
 	}
 
 	/* End of Getters and setter */
+	
+	/**
+	 * When the method is attached to the activity this should implement
+	 * TeamsEditListener Interface in order to be set as the listener of
+	 * the commands.
+	 */
+	@Override
+	public void onAttach(Activity activity) {
+		if(this.listener == null 
+				&& (!(activity instanceof TeamsListCommandsListener))){
+			throw new IllegalArgumentException("Attached activity does not implement " +
+					"TeamsAddListener in order to handle the results. " +
+					"Please implement this interface in passed activity or set the appropiate listener");
+		}
+		if (this.listener == null)
+			setListener((TeamsAddListener) activity);
+		super.onAttach(activity);
+	}
 	
 	/**
 	 * Interface to be used when the adding commands are executed

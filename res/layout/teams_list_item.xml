@@ -4,11 +4,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <ImageView
+        android:id="@+id/team_list_item_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="55dip" android:minHeight="55dip"
+        android:maxWidth="75dip" android:maxHeight="75dip"
+        android:layout_alignParentLeft="true"
+        android:src="@android:drawable/ic_menu_slideshow" />
+
     <TextView
         android:id="@+id/teams_list_item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_alignBottom="@+id/team_list_item_logo"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/team_list_item_logo"
         android:text="teams_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 

@@ -10,4 +10,7 @@
     <string name="delete">Delete</string>
     <string name="update">update</string>
     <string name="teams_management">Teams Management</string>
+    <string name="teams">Teams</string>
+    <string name="action_bar_title_here">Title Here</string>
+    <string name="edit">Edit</string>
 </resources>

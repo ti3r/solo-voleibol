@@ -10,8 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
-
+/**
+ * The Adapter object used to populate the Teams List present in 
+ * the TeamsListFragment class. 
+ * 
+ * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+ *
+ */
 public class TeamsListAdapter extends ArrayAdapter<Team> {
 
 	public TeamsListAdapter(Context context, List<Team> objects) {
@@ -28,6 +35,12 @@ public class TeamsListAdapter extends ArrayAdapter<Team> {
 		//map the data to the view 
 		((TextView)convertView.findViewById(R.id.teams_list_item_name))
 			.setText(getItem(position).getName());
+		//If the team has a specified logo replace the image view bitmap with
+		//the bitmap of the object
+		if ((getItem(position).getLogo() != null)){
+			((ImageView)convertView.findViewById(R.id.team_list_item_logo))
+			.setImageBitmap(getItem(position).getLogo());
+		}
 		
 		return convertView;
 	}	
