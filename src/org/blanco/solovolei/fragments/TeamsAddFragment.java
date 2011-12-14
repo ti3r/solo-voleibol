@@ -10,6 +10,7 @@ import org.blanco.solovolei.fragments.TeamsListFragment.TeamsListCommandsListene
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
@@ -78,8 +80,27 @@ public class TeamsAddFragment extends Fragment {
 				communicateCancel();
 			}
 		});
-		
+		ImageButton btnLogo = (ImageButton) result.findViewById(R.id.teams_add_layout_btn_logo);
+		btnLogo.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				pickLogo();
+			}
+		});
 		return result;
+	}
+	
+	/**
+	 * Method that will pick the logo from the galler or camera in order to attach
+	 * it to the new created team. 
+	 */
+	private void pickLogo() {
+		//TODO Create the method to pick the logo from the gallery or cammera
+		Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+		i.setType("image/png");
+		//i.addCategory(Intent.CATEGORY_OPENABLE);
+		//i.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		startActivityForResult(i, 0);
 	}
 	
 	/**
@@ -117,7 +138,9 @@ public class TeamsAddFragment extends Fragment {
 		Log.d(TAG, "Clearing fields in the TeamsAddFragment");
 		((TextView)getView().findViewById(R.id.teams_add_txt_name)).setText("");
 	}
-	
+	/**
+	 * It communicates the cancel action to the established listener.
+	 */
 	private void communicateCancel() {
 		Log.d(TAG, "A cancel method has been received in the TeamsAddFragment");
 		if (listener != null)

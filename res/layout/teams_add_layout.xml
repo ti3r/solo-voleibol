@@ -47,4 +47,21 @@
         android:layout_toLeftOf="@+id/teams_add_btn_clear"
         android:text="@string/accept" />
 
+    <TextView
+        android:id="@+id/teams_add_layout_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/teams_add_txt_name"
+        android:text="@string/logo"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageButton
+        android:id="@+id/teams_add_layout_btn_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/teams_add_layout_logo"
+        android:src="@android:drawable/ic_menu_slideshow" />
+
 </RelativeLayout>
