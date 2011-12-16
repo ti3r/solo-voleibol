@@ -1,8 +1,8 @@
 package org.blanco.solovolei;
 
 import org.blanco.solovolei.entities.Team;
-import org.blanco.solovolei.fragments.TeamsAddFragment;
-import org.blanco.solovolei.fragments.TeamsListFragment;
+import org.blanco.solovolei.fragments.teams.TeamsAddFragment;
+import org.blanco.solovolei.fragments.teams.TeamsListFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;

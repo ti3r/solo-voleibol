@@ -1,4 +1,4 @@
-package org.blanco.solovolei.fragments;
+package org.blanco.solovolei.fragments.teams;
 
 import static org.blanco.solovolei.MainActivity.TAG;
 
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Team;
-import org.blanco.solovolei.fragments.TeamsListFragment.TeamsListCommandsListener;
+import org.blanco.solovolei.fragments.teams.TeamsListFragment.TeamsListCommandsListener;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;

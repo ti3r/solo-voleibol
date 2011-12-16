@@ -9,7 +9,7 @@
         android:layout_width="match_parent" android:layout_height="wrap_content"/>
    
 	<!-- Starts the fragments container with the list of teams at the start of the Activity -->
-    <fragment class="org.blanco.solovolei.fragments.TeamsListFragment"
+    <fragment class="org.blanco.solovolei.fragments.teams.TeamsListFragment"
         android:id="@+id/teams_layout_fragment_container"
         android:layout_below="@id/action_bar"
         android:layout_width="match_parent" android:layout_height="wrap_content"/>

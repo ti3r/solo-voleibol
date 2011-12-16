@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Team;
-import org.blanco.solovolei.fragments.TeamsListFragment.TeamsListCommandsListener;
+import org.blanco.solovolei.fragments.teams.TeamsListFragment.TeamsListCommandsListener;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
@@ -22,20 +22,20 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
+import org.blanco.solovolei.entities.Player;
 import com.j256.ormlite.dao.Dao;
 /**
  * The fragment that will handle all the processes to 
- * add a new Team to the database. This fragment can
+ * add a new Player to the database. This fragment can
  * be attached to any part of the application any time.
  * 
  * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
  *
  */
-public class TeamsAddFragment extends Fragment {
+public class PlayersAddFragment extends Fragment {
 
 	/** The dao to be used in the fragment */
-	private Dao<Team, Long> dao = null;
+	private Dao<Player, Long> dao = null;
 	
 	/** The listener to be used in the fragments operation*/
 	private TeamsAddListener listener = null;
@@ -45,12 +45,12 @@ public class TeamsAddFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		//retrieve the dao
-		dao = (Dao<Team, Long>) DaoFactory.getDao(getActivity(), Team.class);
+		dao = (Dao<Player, Long>) DaoFactory.getDao(getActivity(), Player.class);
 		super.onCreate(savedInstanceState);
 	}
 	/**
-	 * Creates the view to be displayed ot the user in order to create a new
-	 * team in the database.
+	 * Creates the view to be displayed to the user in order to create a new
+	 * Player in the database.
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,23 +111,23 @@ public class TeamsAddFragment extends Fragment {
 	private void addTeam(){
 		Log.d(TAG, "A Add Team command has been received in the TeamsAddFragment");
 		//Parse the Team information
-		Team t = parseTeamInfo();
-		if (t != null && dao != null){
-			try {
-				dao.createOrUpdate(t);
-				clearFields();
-				if (listener != null) //communicate the action
-					listener.onTeamAdded(t.getId(), t);
-			} catch (SQLException e) {
-				Log.e(TAG, "Error createOrUpdate Team.",e);
-				if (listener != null)
-					listener.onTeamAddingError(t, e);
-			}
-		}else{
-			Log.e(TAG, "Error adding Team. Dao is null");
-			if (listener != null) //communicate the error
-				listener.onTeamAddingError(t, new Exception("TeamsAdd dao is null"));
-		}
+//		Team t = parseTeamInfo();
+//		if (t != null && dao != null){
+//			try {
+//				//dao.createOrUpdate(t);
+//				clearFields();
+//				if (listener != null) //communicate the action
+//					listener.onTeamAdded(t.getId(), t);
+//			} catch (SQLException e) {
+//				Log.e(TAG, "Error createOrUpdate Team.",e);
+//				if (listener != null)
+//					listener.onTeamAddingError(t, e);
+//			}
+//		}else{
+//			Log.e(TAG, "Error adding Team. Dao is null");
+//			if (listener != null) //communicate the error
+//				listener.onTeamAddingError(t, new Exception("TeamsAdd dao is null"));
+//		}
 	}
 
 	/**

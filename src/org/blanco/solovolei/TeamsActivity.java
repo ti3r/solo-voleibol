@@ -4,12 +4,12 @@ import static org.blanco.solovolei.MainActivity.TAG;
 
 import org.blanco.solovolei.entities.Team;
 import org.blanco.solovolei.fragments.ActionBar;
-import org.blanco.solovolei.fragments.TeamsAddFragment;
-import org.blanco.solovolei.fragments.TeamsAddFragment.TeamsAddListener;
-import org.blanco.solovolei.fragments.TeamsEditFragment;
-import org.blanco.solovolei.fragments.TeamsEditFragment.TeamsEditListener;
-import org.blanco.solovolei.fragments.TeamsListFragment;
-import org.blanco.solovolei.fragments.TeamsListFragment.TeamsListCommandsListener;
+import org.blanco.solovolei.fragments.teams.TeamsAddFragment;
+import org.blanco.solovolei.fragments.teams.TeamsEditFragment;
+import org.blanco.solovolei.fragments.teams.TeamsListFragment;
+import org.blanco.solovolei.fragments.teams.TeamsAddFragment.TeamsAddListener;
+import org.blanco.solovolei.fragments.teams.TeamsEditFragment.TeamsEditListener;
+import org.blanco.solovolei.fragments.teams.TeamsListFragment.TeamsListCommandsListener;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -63,6 +63,7 @@ public class TeamsActivity extends FragmentActivity
 	 */
 	private void executeAdd(){
 		setFragmentOnFragmentContainer(addFragment);
+		actionBar.setCommandsType(ActionBar.ACC_TYPE_ACCEPT_CANCEL,addFragment);
 	}
 	
 	/**

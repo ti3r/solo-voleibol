@@ -30,13 +30,6 @@ public class PlayersListFragment extends ListFragment {
 		super.onStart();
 	}
 
-//	@Override
-//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//			Bundle savedInstanceState) {
-//		
-//		return inflater.inflate(org.blanco.solovolei.R.layout.players_list_layout, null);
-//	}
-
 	
 	
 	public void findPlayersAndPopulateList(){
@@ -46,9 +39,7 @@ public class PlayersListFragment extends ListFragment {
 			Log.d("alog", "Players count: "+players.size());
 		} catch (SQLException e) {
 			Log.e(MainActivity.TAG, "Error retrieving the players");
-		}
-		
-		
+		}	
 	}
 	
 	

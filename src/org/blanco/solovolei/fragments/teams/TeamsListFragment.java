@@ -1,4 +1,4 @@
-package org.blanco.solovolei.fragments;
+package org.blanco.solovolei.fragments.teams;
 
 import static org.blanco.solovolei.MainActivity.TAG;
 
