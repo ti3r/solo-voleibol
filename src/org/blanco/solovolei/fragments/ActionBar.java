@@ -21,6 +21,7 @@ public class ActionBar extends Fragment {
 	 */
 	public static final short ACC_TYPE_ACCEPT_CANCEL = 0x01;
 	public static final short ACC_TYPE_ACCEPT_CANCEL_RESET = 0x02;
+	public static final short ACC_TYPE_ADD_DELETE = 0x04;
 	
 	ImageButton btnAdd = null;
 	ImageButton btnDelete = null;
@@ -43,6 +44,7 @@ public class ActionBar extends Fragment {
 				addPressed();
 			}
 		});
+		//btnAdd.setVisibility(View.GONE);
 		btnDelete = (ImageButton) v.findViewById(R.id.action_bar_btn_delete);
 		btnDelete.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -50,6 +52,7 @@ public class ActionBar extends Fragment {
 				deletePressed();
 			}
 		});
+		btnDelete.setVisibility(View.GONE);
 		btnAccept = (ImageButton) v.findViewById(R.id.action_bar_btn_accept);
 		btnAccept.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -57,6 +60,7 @@ public class ActionBar extends Fragment {
 				acceptPressed();
 			}
 		}); 
+		btnAccept.setVisibility(View.GONE);
 		btnCancel = (ImageButton) v.findViewById(R.id.action_bar_btn_cancel);
 		btnCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -64,7 +68,7 @@ public class ActionBar extends Fragment {
 				cancelPressed();
 			}
 		}); 
-		
+		btnCancel.setVisibility(View.GONE);
 		
 		
 		return v;
@@ -77,7 +81,7 @@ public class ActionBar extends Fragment {
 		Log.d(TAG, "Button Add clicked. Ignoring call");
 		if (addHandler != null)
 			addHandler.addTriggered();
-	}
+ 	}
 	/**
 	 * The method that will be executed when the delete button is pressed.
 	 */

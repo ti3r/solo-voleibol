@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.blanco.solovolei.MainActivity;
 import org.blanco.solovolei.entities.Player;
+import org.blanco.solovolei.gui.adapters.PlayersListAdapter;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.os.Bundle;
@@ -36,6 +37,8 @@ public class PlayersListFragment extends ListFragment {
 		
 		try {
 			List<Player> players = (List<Player>) dao.queryForAll();
+			PlayersListAdapter adapter = new PlayersListAdapter(getActivity(), players);
+			setListAdapter(adapter);
 			Log.d("alog", "Players count: "+players.size());
 		} catch (SQLException e) {
 			Log.e(MainActivity.TAG, "Error retrieving the players");

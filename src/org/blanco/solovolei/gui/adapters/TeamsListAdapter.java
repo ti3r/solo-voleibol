@@ -6,6 +6,8 @@ import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Team;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +40,12 @@ public class TeamsListAdapter extends ArrayAdapter<Team> {
 		//If the team has a specified logo replace the image view bitmap with
 		//the bitmap of the object
 		if ((getItem(position).getLogo() != null)){
-			((ImageView)convertView.findViewById(R.id.team_list_item_logo))
-			.setImageBitmap(getItem(position).getLogo());
+			final ImageView img =
+			((ImageView)convertView.findViewById(R.id.team_list_item_logo));
+			
+			img.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeFile(
+					getItem(position).getLogo()), 0, 0, 25, 25)
+					);
 		}
 		
 		return convertView;

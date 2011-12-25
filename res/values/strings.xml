@@ -16,4 +16,6 @@
     <string name="logo">Logo</string>
     <string name="player_name">name</string>
     <string name="player_number">Number</string>
+    <string name="add">Add</string>
+    <string name="player_no_sign">#</string>
 </resources>

@@ -14,7 +14,7 @@
          android:layout_below="@id/action_bar"
         android:layout_width="match_parent" android:layout_height="wrap_content"/>
      -->
-    <fragment class="org.blanco.solovolei.fragments.teams.TeamsListFragment"
+    <fragment class="org.blanco.solovolei.fragments.PlayersListFragment"
         android:id="@+id/teams_layout_fragment_container"
         android:layout_below="@id/action_bar"
         android:layout_width="match_parent" android:layout_height="wrap_content"/>

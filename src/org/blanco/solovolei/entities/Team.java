@@ -1,7 +1,5 @@
 package org.blanco.solovolei.entities;
 
-import android.graphics.Bitmap;
-
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -22,8 +20,8 @@ public class Team {
 	private int id;
 	@DatabaseField(dataType=DataType.STRING)
 	private String name;
-	@DatabaseField(dataType=DataType.BYTE_OBJ)
-	private Bitmap logo;
+	@DatabaseField(dataType=DataType.STRING)
+	private String logo;
 	
 	/* Getters and Setters */
 	/**
@@ -56,17 +54,19 @@ public class Team {
 	}
 	
 	/**
-	 * Retrieves the <code>Bitmap</code> logo attribute of the object
-	 * @return The <code>Bitmap</code> logo attribute of the object
+	 * Retrieves the <code>String</code> representation 
+	 * of the logo attribute of the object
+	 * @return The <code>String</code> representation of the
+	 * logo attribute of the object
 	 */
-	public Bitmap getLogo() {
+	public String getLogo() {
 		return logo;
 	}
 	/**
 	 * Sets the <code>Bitmap</code> logo attribute of the object
 	 * @param name The <code>Bitmap</code> vale to be set in the logo attribute
 	 */
-	public void setLogo(Bitmap logo) {
+	public void setLogo(String logo) {
 		this.logo = logo;
 	}
 	

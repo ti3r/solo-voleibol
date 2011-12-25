@@ -130,7 +130,7 @@ public class TeamsListFragment extends Fragment {
 	public void refreshList() {
 		findTeamsAndPopulateList();
 	}
-
+	
 	/**
 	 * Executed when the fragment is shown, it finds the teams from the database
 	 * and build the requested adapter in order to display the teams in the

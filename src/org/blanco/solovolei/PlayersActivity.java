@@ -1,40 +1,24 @@
 package org.blanco.solovolei;
 
-import static org.blanco.solovolei.MainActivity.TAG;
-
-import org.blanco.solovolei.entities.Team;
 import org.blanco.solovolei.fragments.ActionBar;
-import org.blanco.solovolei.fragments.teams.TeamsAddFragment;
-import org.blanco.solovolei.fragments.teams.TeamsAddFragment.TeamsAddListener;
-import org.blanco.solovolei.fragments.teams.TeamsEditFragment;
-import org.blanco.solovolei.fragments.teams.TeamsEditFragment.TeamsEditListener;
-import org.blanco.solovolei.fragments.teams.TeamsListFragment;
-import org.blanco.solovolei.fragments.teams.TeamsListFragment.TeamsListCommandsListener;
+import org.blanco.solovolei.fragments.PlayersListFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
-public class TeamsActivity extends FragmentActivity 
-	implements ActionBar.AddCommandHandler,
-	TeamsAddListener,
-	TeamsListCommandsListener,
-	TeamsEditListener{
+public class PlayersActivity extends FragmentActivity 
+	implements ActionBar.AddCommandHandler
+	{
 	
-	ImageButton btnAdd = null;
-	TeamsListFragment listFragment = null;
-	TeamsAddFragment addFragment = null;
-	TeamsEditFragment editFragment = null;
 	ActionBar actionBar = null;
-	
+	/** The fragment that will hold the list of players */
+	PlayersListFragment listFragment = null;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
-		setContentView(R.layout.teams_layout);
+		setContentView(R.layout.players_layout);
 		init();
 	}
 
@@ -48,13 +32,13 @@ public class TeamsActivity extends FragmentActivity
 		if (actionBar != null)
 			actionBar.setAddCommandHandler(this);
 		//retrieve the fragment from the intial view
-		listFragment = (TeamsListFragment) getSupportFragmentManager().
-				findFragmentById(R.id.teams_layout_fragment_container);
+		listFragment = (PlayersListFragment) getSupportFragmentManager().
+			findFragmentById(R.id.teams_layout_fragment_container);
 		
 		
 		//Create a new Add Fragment and add it to the stack
-		addFragment = new TeamsAddFragment();
-		editFragment = new TeamsEditFragment();
+		//addFragment = new TeamsAddFragment();
+		//editFragment = new TeamsEditFragment();
 		//listFragment = new TeamsListFragment();
 		
 	}
@@ -64,14 +48,14 @@ public class TeamsActivity extends FragmentActivity
 	 * the database
 	 */
 	private void executeAdd(){
-		setFragmentOnFragmentContainer(addFragment);
+		//setFragmentOnFragmentContainer(addFragment);
 	}
 	
 	/**
 	 * Sets the appropriate fragment in the fragment container area.
 	 * @param fragment The fragment to be placed in the container
 	 */
-	private void setFragmentOnFragmentContainer(Fragment fragment){
+	public void setFragmentOnFragmentContainer(Fragment fragment){
 		FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
 		trans.remove(getSupportFragmentManager()
 				.findFragmentById(R.id.teams_layout_fragment_container));
@@ -88,6 +72,7 @@ public class TeamsActivity extends FragmentActivity
 		executeAdd();
 	}
 
+	/*
 	@Override
 	public void onTeamItemSelected(Team item) {
 		//Do nothing
@@ -143,22 +128,23 @@ public class TeamsActivity extends FragmentActivity
 	
 	@Override
 	public void onTeamAdded(long id, Team t) {
-		Toast.makeText(TeamsActivity.this.getApplicationContext(),
+		Toast.makeText(PlayersActivity.this.getApplicationContext(),
 				"TeamAdded", Toast.LENGTH_LONG).show();
 		setFragmentOnFragmentContainer(listFragment);
 	}
 
 	@Override
 	public void onTeamAddingError(Team t, Exception e) {
-		Toast.makeText(TeamsActivity.this.getApplicationContext(),
+		Toast.makeText(PlayersActivity.this.getApplicationContext(),
 				"Error ading the team."+e.getMessage(), Toast.LENGTH_LONG).show();
 		setFragmentOnFragmentContainer(listFragment);
 	}
 
 	@Override
 	public void onTeamAddingCancel() {
-		Toast.makeText(TeamsActivity.this.getApplicationContext(),
+		Toast.makeText(PlayersActivity.this.getApplicationContext(),
 				"Action Cancelled", Toast.LENGTH_LONG).show();
 		setFragmentOnFragmentContainer(listFragment);	
 	}
+	*/
 }

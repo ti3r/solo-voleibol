@@ -10,7 +10,13 @@ import org.blanco.solovolei.fragments.teams.TeamsListFragment.TeamsListCommandsL
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.j256.ormlite.dao.Dao;
 /**
@@ -41,6 +48,7 @@ public class TeamsEditFragment extends Fragment {
 	EditText txtName = null;
 	Button accept = null;
 	Button cancel = null;
+	ImageButton btnLogo = null;
 	/* end of GUI controls */
 	
 	@SuppressWarnings("unchecked")
@@ -91,6 +99,14 @@ public class TeamsEditFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				cancelEdit();
+			}
+		});
+		btnLogo = (ImageButton) 
+				v.findViewById(R.id.teams_edit_layout_btn_logo);
+		btnLogo.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				pickPhoto();
 			}
 		});
 		return v;
@@ -145,6 +161,54 @@ public class TeamsEditFragment extends Fragment {
 		}
 	}
 	
+	/**
+	 * Launch the intent to pick a photo from the gallery 
+	 * or the camera. The result must be treated in the 
+	 * onActivityResult method of the fragment.
+	 */
+	private void pickPhoto(){
+		Intent i = new Intent(Intent.ACTION_PICK);
+		i.setType("image/*");
+		startActivityForResult(i, 0);
+	}
+	
+	/**
+	 * Parses the result of the Intent ACTION_PICK in order
+	 * to retrieve the path of the image that has been selected
+	 * 
+	 * @param intent The intent that resulted from the ACTION_PICK
+	 * action
+	 * @return String containing the path of the selected image
+	 */
+	private String parseImage(Intent intent){
+		Uri data = intent.getData();
+		
+		Cursor cursor = getActivity().managedQuery(data, 
+				new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+		
+		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String image = cursor.getString(column_index);
+        cursor.close();
+        return image;
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, 
+			int resultCode, Intent data) {
+		if (requestCode == 0 && resultCode == Activity.RESULT_OK){
+			String path = parseImage(data);
+			btnLogo.setImageBitmap(Bitmap.createBitmap(
+					BitmapFactory.decodeFile(path), 0, 0, btnLogo.getWidth(), 
+					btnLogo.getHeight(), null, false));
+			team.setLogo(path);
+		}else{
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+
+
 	/**
 	 * Interface to handle the edit events that happen within the fragment 
 	 * 
