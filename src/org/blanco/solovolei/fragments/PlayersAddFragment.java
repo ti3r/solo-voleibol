@@ -147,26 +147,26 @@ public class PlayersAddFragment extends Fragment {
 			listener.onTeamAddingCancel();
 	}
 	
-	/**
-	 * Parses the information that the user inserts in the form to 
-	 * create a new team and creates a new Team object ready to be inserted
-	 * @return a <code>Team</code> object with the information entered by the
-	 * user
-	 */
-	private Team parseTeamInfo() {
-		Team t = new Team();
-		TextView txtName = ((TextView)getView().findViewById(R.id.teams_add_txt_name)); 
-		if (txtName.getText() != null && txtName.getText().length() > 0){
-			t.setName(txtName.getText().toString());
-			return t;
-		}else{
-			Animation anim = AnimationUtils.loadAnimation(getActivity(), 
-					android.R.anim.fade_out);
-			txtName.startAnimation(anim);
-			return null;
-		}
-		
-	}
+//	/**
+//	 * Parses the information that the user inserts in the form to 
+//	 * create a new team and creates a new Team object ready to be inserted
+//	 * @return a <code>Team</code> object with the information entered by the
+//	 * user
+//	 */
+//	private Team parseTeamInfo() {
+//		Team t = new Team();
+//		TextView txtName = ((TextView)getView().findViewById(R.id.teams_add_txt_name)); 
+//		if (txtName.getText() != null && txtName.getText().length() > 0){
+//			t.setName(txtName.getText().toString());
+//			return t;
+//		}else{
+//			Animation anim = AnimationUtils.loadAnimation(getActivity(), 
+//					android.R.anim.fade_out);
+//			txtName.startAnimation(anim);
+//			return null;
+//		}
+//		
+//	}
 	
 	/* Getters and setter */
 	
