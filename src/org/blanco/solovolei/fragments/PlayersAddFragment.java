@@ -5,8 +5,8 @@ import static org.blanco.solovolei.MainActivity.TAG;
 import java.sql.SQLException;
 
 import org.blanco.solovolei.R;
-import org.blanco.solovolei.entities.Team;
-import org.blanco.solovolei.fragments.teams.TeamsListFragment.TeamsListCommandsListener;
+import org.blanco.solovolei.entities.Player;
+import org.blanco.solovolei.misc.Animate;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
@@ -17,12 +17,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import org.blanco.solovolei.entities.Player;
+
 import com.j256.ormlite.dao.Dao;
 /**
  * The fragment that will handle all the processes to 
@@ -38,7 +37,7 @@ public class PlayersAddFragment extends Fragment {
 	private Dao<Player, Long> dao = null;
 	
 	/** The listener to be used in the fragments operation*/
-	private TeamsAddListener listener = null;
+	private PlayersAddListener listener = null;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -55,32 +54,32 @@ public class PlayersAddFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View result = inflater.inflate(R.layout.teams_add_layout, null);
+		View result = inflater.inflate(R.layout.players_add_layout, null);
 		//set the appropriate listeners for this fragment
-		Button btnAccept = (Button) result.findViewById(R.id.teams_add_btn_accept);
+		Button btnAccept = (Button) result.findViewById(R.id.players_add_btn_accpet);
 		btnAccept.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				addTeam();
+				add();
 			}
 		});
 		
-		Button btnClear = (Button) result.findViewById(R.id.teams_add_btn_clear);
-		btnClear.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				clearFields();
-			}
-		});
+		//Button btnClear = (Button) result.findViewById(R.id.teams_add_btn_clear);
+		//btnClear.setOnClickListener(new View.OnClickListener() {
+		//	@Override
+		//	public void onClick(View v) {
+		//		clearFields();
+		//	}
+		//});
 		
-		Button btnCancel = (Button) result.findViewById(R.id.teams_add_btn_cancel);
+		Button btnCancel = (Button) result.findViewById(R.id.players_add_btn_cancel);
 		btnCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				communicateCancel();
 			}
 		});
-		ImageButton btnLogo = (ImageButton) result.findViewById(R.id.teams_add_layout_btn_logo);
+		ImageButton btnLogo = (ImageButton) result.findViewById(R.id.players_add_btn_photo);
 		btnLogo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -108,26 +107,26 @@ public class PlayersAddFragment extends Fragment {
 	 * This method will communicate the results to the exterior through
 	 * the specified listener
 	 */
-	private void addTeam(){
+	private void add(){
 		Log.d(TAG, "A Add Team command has been received in the TeamsAddFragment");
-		//Parse the Team information
-//		Team t = parseTeamInfo();
-//		if (t != null && dao != null){
-//			try {
-//				//dao.createOrUpdate(t);
-//				clearFields();
+		//Parse the Player information
+		Player t = parsePlayerInfo();
+		if (t != null && dao != null){
+			try {
+				dao.createOrUpdate(t);
+				clearFields();
 //				if (listener != null) //communicate the action
 //					listener.onTeamAdded(t.getId(), t);
-//			} catch (SQLException e) {
-//				Log.e(TAG, "Error createOrUpdate Team.",e);
+			} catch (SQLException e) {
+				Log.e(TAG, "Error createOrUpdate Team.",e);
 //				if (listener != null)
 //					listener.onTeamAddingError(t, e);
-//			}
+			}
 //		}else{
 //			Log.e(TAG, "Error adding Team. Dao is null");
 //			if (listener != null) //communicate the error
 //				listener.onTeamAddingError(t, new Exception("TeamsAdd dao is null"));
-//		}
+		}
 	}
 
 	/**
@@ -136,37 +135,49 @@ public class PlayersAddFragment extends Fragment {
 	 */
 	private void clearFields(){
 		Log.d(TAG, "Clearing fields in the TeamsAddFragment");
-		((TextView)getView().findViewById(R.id.teams_add_txt_name)).setText("");
+		((TextView)getView().findViewById(R.id.players_add_txt_name)).setText("");
+		((TextView)getView().findViewById(R.id.players_add_txt_number)).setText("");
 	}
 	/**
 	 * It communicates the cancel action to the established listener.
 	 */
 	private void communicateCancel() {
-		Log.d(TAG, "A cancel method has been received in the TeamsAddFragment");
+		Log.d(TAG, "A cancel method has been received in the PlayersAddFragment");
 		if (listener != null)
-			listener.onTeamAddingCancel();
+			listener.onPlayerAddingCanceled();
 	}
 	
-//	/**
-//	 * Parses the information that the user inserts in the form to 
-//	 * create a new team and creates a new Team object ready to be inserted
-//	 * @return a <code>Team</code> object with the information entered by the
-//	 * user
-//	 */
-//	private Team parseTeamInfo() {
-//		Team t = new Team();
-//		TextView txtName = ((TextView)getView().findViewById(R.id.teams_add_txt_name)); 
-//		if (txtName.getText() != null && txtName.getText().length() > 0){
-//			t.setName(txtName.getText().toString());
-//			return t;
-//		}else{
-//			Animation anim = AnimationUtils.loadAnimation(getActivity(), 
-//					android.R.anim.fade_out);
-//			txtName.startAnimation(anim);
-//			return null;
-//		}
-//		
-//	}
+	/**
+	 * Parses the information that the user inserts in the form to 
+	 * create a new player and creates a new Player object ready to be inserted
+	 * @return a <code>Player</code> object with the information entered by the
+	 * user
+	 */
+	private Player parsePlayerInfo() {
+		Player p = new Player();
+		View failed[] = new View[2];
+		EditText txtName = ((EditText)getView().findViewById(R.id.players_add_edt_name)); 
+		EditText txtNumber = ((EditText)getView().findViewById(R.id.players_add_edt_number));
+		
+		if (txtName.getText() != null && txtName.getText().length() > 0){
+			p.setName(txtName.getText().toString());
+		}else{
+			failed[0] = txtName;
+		}
+		
+		if (txtNumber.getText() != null && txtNumber.getText().length() > 0){
+			p.setNumber(Integer.parseInt(txtNumber.getText().toString()));
+		}else{
+			failed[1] = txtNumber;
+		}
+		
+		if (failed[0] != null || failed[1] != null){
+			Animate.fadeOut(failed);
+			return null;
+		}
+		
+		return p;
+	}
 	
 	/* Getters and setter */
 	
@@ -174,7 +185,7 @@ public class PlayersAddFragment extends Fragment {
 	 * Returns the listener for this Fragment
 	 * @return The <code>TeamsAddListener</code> object associated with this fragment
 	 */
-	public TeamsAddListener getListener() {
+	public PlayersAddListener getListener() {
 		return listener;
 	}
 	
@@ -183,7 +194,7 @@ public class PlayersAddFragment extends Fragment {
 	 * @param listener The <code>TeamsAddListener</code> that will be  associated with 
 	 * this fragment
 	 */
-	public void setListener(TeamsAddListener listener) {
+	public void setListener(PlayersAddListener listener) {
 		this.listener = listener;
 	}
 
@@ -197,13 +208,13 @@ public class PlayersAddFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		if(this.listener == null 
-				&& (!(activity instanceof TeamsListCommandsListener))){
+				&& (!(activity instanceof PlayersAddListener ))){
 			throw new IllegalArgumentException("Attached activity does not implement " +
-					"TeamsAddListener in order to handle the results. " +
+					"AddActionListener in order to handle the results. " +
 					"Please implement this interface in passed activity or set the appropiate listener");
 		}
 		if (this.listener == null)
-			setListener((TeamsAddListener) activity);
+			setListener((PlayersAddListener) activity);
 		super.onAttach(activity);
 	}
 	
@@ -216,25 +227,25 @@ public class PlayersAddFragment extends Fragment {
 	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
 	 *
 	 */
-	public interface TeamsAddListener{
+	public interface PlayersAddListener{
 		/**
 		 * The call that will be executed when one team has been successfully added
 		 * to the database
-		 * @param id The <code>long</code> id of the new created Team
-		 * @param t The <code>Team</code> Team object that has been added to the database.
+		 * @param p The <code>Player</code>  object that has been added to the database.
 		 */
-		public void onTeamAdded(long id, Team t);
+		public void onPlayerAdded(Player p);
 		/**
-		 * The call that will be executed when the add process fails and the team can't
+		 * The call that will be executed when the add process fails and the player can't
 		 * be added to the database.
-		 * @param t The incomplete <code>Team</code> object that we tried to add to the 
+		 * @param p The incomplete <code>Player</code> object that we tried to add to the 
 		 * database
 		 * @param e The <code>Exception</code> object that caused the error.
 		 */
-		public void onTeamAddingError(Team t, Exception e);
+		public void onPlayerAddingError(Player p, Exception e);
 		/**
 		 * The call that will be executed then the user cancels the adding process.
 		 */
-		public void onTeamAddingCancel();
+		public void onPlayerAddingCanceled();
+		
 	}
 }

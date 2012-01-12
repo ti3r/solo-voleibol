@@ -1,20 +1,31 @@
 package org.blanco.solovolei;
 
+import org.blanco.solovolei.entities.Player;
 import org.blanco.solovolei.fragments.ActionBar;
+import org.blanco.solovolei.fragments.PlayersAddFragment;
 import org.blanco.solovolei.fragments.PlayersListFragment;
+import org.blanco.solovolei.fragments.PlayersAddFragment.PlayersAddListener;
+import org.blanco.solovolei.fragments.PlayersListFragment.PlayersListCommandsListener;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.widget.Toast;
+
+import static org.blanco.solovolei.MainActivity.TAG;
 
 public class PlayersActivity extends FragmentActivity 
 	implements ActionBar.AddCommandHandler
+	, PlayersAddListener, PlayersListCommandsListener
 	{
 	
 	ActionBar actionBar = null;
 	/** The fragment that will hold the list of players */
 	PlayersListFragment listFragment = null;
+	/** The fragment in charge of adding players to db */
+	PlayersAddFragment addFragment = null;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
@@ -37,7 +48,7 @@ public class PlayersActivity extends FragmentActivity
 		
 		
 		//Create a new Add Fragment and add it to the stack
-		//addFragment = new TeamsAddFragment();
+		addFragment = new PlayersAddFragment();
 		//editFragment = new TeamsEditFragment();
 		//listFragment = new TeamsListFragment();
 		
@@ -48,7 +59,7 @@ public class PlayersActivity extends FragmentActivity
 	 * the database
 	 */
 	private void executeAdd(){
-		//setFragmentOnFragmentContainer(addFragment);
+		setFragmentOnFragmentContainer(addFragment);
 	}
 	
 	/**
@@ -72,6 +83,47 @@ public class PlayersActivity extends FragmentActivity
 		executeAdd();
 	}
 
+	@Override
+	public void onPlayerAdded(Player p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPlayerAddingError(Player p, Exception e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPlayerAddingCanceled() {
+		Log.d(TAG, "Players add was cancelled");
+		setFragmentOnFragmentContainer(listFragment);
+	}
+	
+	//methods of the PlayersListCommandsListener interface
+
+	@Override
+	public boolean onPlayerItemPreDelete(Player player) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void onPlayerItemPostDelete(Player player) {
+		Toast.makeText(getBaseContext(), getString(R.string.player_deleted),
+				Toast.LENGTH_SHORT).show();
+		listFragment.findPlayersAndPopulateList();
+	}
+
+	@Override
+	public void onPlayerItemDeleteError(Player player, Exception e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	//end of methods of the playerslistcommandslistener interface
+	
 	/*
 	@Override
 	public void onTeamItemSelected(Team item) {

@@ -18,4 +18,6 @@
     <string name="player_number">Number</string>
     <string name="add">Add</string>
     <string name="player_no_sign">#</string>
+    <string name="player_photo">Photo</string>
+    <string name="player_deleted">Player has been deleted</string>
 </resources>
