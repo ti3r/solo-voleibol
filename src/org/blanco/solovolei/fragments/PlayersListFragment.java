@@ -1,3 +1,26 @@
+/**
+ * The MIT License
+ * 
+ * Copyright (c) 2012 Alexandro Blanco <ti3r.bubblenet@gmail.com>
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package org.blanco.solovolei.fragments;
 
 import static org.blanco.solovolei.MainActivity.TAG;
@@ -20,9 +43,8 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListAdapter;
-import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ListAdapter;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -95,7 +117,7 @@ public class PlayersListFragment extends ListFragment {
 	public boolean onContextItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.edit_ctx_menu_edit_item:
-			Toast.makeText(getActivity(), "Edit", Toast.LENGTH_LONG).show();
+			edit(item);
 			break;
 		case R.id.delete_update_ctx_menu_delete_item:
 			delete(item);
@@ -106,6 +128,18 @@ public class PlayersListFragment extends ListFragment {
 		return true;
 	}
 
+
+	private void edit(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		Player player = (Player) getListAdapter().getItem(info.position);
+		if (player == null && listener != null){
+			listener.onPlayerItemDeleteError(null, 
+					new Exception("Unable to locate Player on List Adapter"));
+		}else if (listener != null){
+			Log.d(TAG, "Starting edition for player"+player);
+			listener.onPlayerItemEditionStarted(player);
+		}
+	}
 
 	private void delete(MenuItem item){
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -191,7 +225,7 @@ public class PlayersListFragment extends ListFragment {
 		 * @param item
 		 *            The Team item selected from the list.
 		 */
-		//public void onTeamItemEditionStarted(Team item);
+		public void onPlayerItemEditionStarted(Player item);
 		
 		/**
 		 * The method that will be executed before one Team item is deleted from

@@ -20,4 +20,6 @@
     <string name="player_no_sign">#</string>
     <string name="player_photo">Photo</string>
     <string name="player_deleted">Player has been deleted</string>
+    <string name="player_delete_error">An error occurred while deleting the player. Try again!</string>
+    <string name="players_edit_error">Error editing the player. Try again!</string>
 </resources>

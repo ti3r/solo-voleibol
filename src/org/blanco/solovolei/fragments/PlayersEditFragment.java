@@ -21,15 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.blanco.solovolei.fragments.teams;
+package org.blanco.solovolei.fragments;
 
 import static org.blanco.solovolei.MainActivity.TAG;
 
 import java.sql.SQLException;
 
 import org.blanco.solovolei.R;
-import org.blanco.solovolei.entities.Team;
-import org.blanco.solovolei.fragments.teams.TeamsListFragment.TeamsListCommandsListener;
+import org.blanco.solovolei.entities.Player;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
@@ -59,34 +58,36 @@ import com.j256.ormlite.dao.Dao;
  * @author Alexandro Blanco <ti3r.bubblenet@gmail.com> 
  *
  */
-public class TeamsEditFragment extends Fragment {
+public class PlayersEditFragment extends Fragment {
 
-	/** the Team object to be edited */
-	Team team = null;
+	/** the Player object to be edited */
+	private Player player = null;
 	/** The dao that will be used by the fragment */ 
-	Dao<Team, Long> teamsDao = null;
-	TeamsEditListener listener = null;
+	private Dao<Player, Long> playersDao = null;
+	private PlayersEditListener listener = null;
 	
 	/* GUI controls*/
-	EditText txtName = null;
-	Button accept = null;
-	Button cancel = null;
-	ImageButton btnLogo = null;
+	private EditText edtName = null;
+	private Button accept = null;
+	private Button cancel = null;
+	private ImageButton btnLogo = null;
+	private EditText edtNumber;
 	/* end of GUI controls */
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		teamsDao = (Dao<Team, Long>) DaoFactory.getDao(getActivity(), Team.class);
+		playersDao = (Dao<Player, Long>) DaoFactory.
+				getDao(getActivity(), Player.class);
 		super.onCreate(savedInstanceState);
 	}
 	/**
-	 * Set the Team object to be edited and persisted to the database.
+	 * Set the Player object to be edited and persisted to the database.
 	 * 
-	 * @param team The Team object to be edited by the fragment
+	 * @param player The Player object to be edited by the fragment
 	 */
-	public void setTeam(Team team){
-		this.team = team;
+	public void setPlayer(Player player){
+		this.player = player;
 	}
 	/**
 	 * Sets the listener that will handle the results of the edit
@@ -94,30 +95,33 @@ public class TeamsEditFragment extends Fragment {
 	 * @param listener The TeamsEditListener listener that will handle
 	 * the results of the edit process
 	 */
-	public void setTeamsEditListener(TeamsEditListener listener){
+	public void setPlayerEditListener(PlayersEditListener listener){
 		this.listener = listener;
 	}
 
 	/**
 	 * On create view of the fragment, it build the view needed to present
-	 * the Team object associated with the fragment and the controls
-	 * launch the edit process.
+	 * the Player object associated with the fragment and the controls
+	 * to launch the edit process.
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.teams_edit_layout, null);
+		
+		View v = inflater.inflate(R.layout.players_add_layout, null);
 		//establish the links of the controls
-		txtName = (EditText) v.findViewById(R.id.teams_edit_edt_name);
-		txtName.setText(team.getName());
-		accept = (Button) v.findViewById(R.id.teams_edit_btn_accept);
+		edtName = (EditText) v.findViewById(R.id.players_add_edt_name);
+		edtName.setText(player.getName());
+		edtNumber = (EditText) v.findViewById(R.id.players_add_edt_number);
+		edtNumber.setText(String.valueOf(player.getNumber()));
+		accept = (Button) v.findViewById(R.id.players_add_btn_accpet);
 		accept.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				acceptEdit();
 			}
 		});
-		cancel = (Button) v.findViewById(R.id.teams_edit_btn_cancel);
+		cancel = (Button) v.findViewById(R.id.players_add_btn_cancel);
 		cancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -125,11 +129,11 @@ public class TeamsEditFragment extends Fragment {
 			}
 		});
 		btnLogo = (ImageButton) 
-				v.findViewById(R.id.teams_edit_layout_btn_logo);
+				v.findViewById(R.id.players_add_btn_photo);
 		btnLogo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				pickPhoto();
+				//pickPhoto();
 			}
 		});
 		return v;
@@ -137,50 +141,51 @@ public class TeamsEditFragment extends Fragment {
 	
 	
 	/**
-	 * When the method is attached to the activity this should implement
+	 * When the method is attached to the activity it should implement
 	 * TeamsEditListener Interface in order to be set as the listener of
-	 * the commands.
+	 * the commands or set the listener previous to the onAttach Method
 	 */
 	@Override
 	public void onAttach(Activity activity) {
 		if(this.listener == null 
-				&& (!(activity instanceof TeamsListCommandsListener))){
+				&& (!(activity instanceof PlayersEditListener))){
 			throw new IllegalArgumentException("Attached activity does not implement " +
 					"TeamsEditListener in order to handle the results. " +
 					"Please implement this interface in passed activity or set the appropiate listener");
 		}
 		if (this.listener == null)
-			setTeamsEditListener((TeamsEditListener) activity);
+			setPlayerEditListener((PlayersEditListener) activity);
 		super.onAttach(activity);
 	}
 	/**
 	 * The method that will be executed when the Edit process is 
-	 * cancelled. This passes the result to the TeamsEditListener
+	 * cancelled. This passes the result to the PlayerEditListener
 	 * Appropriate method if set.
 	 */
 	private void cancelEdit(){
 		if (listener != null)
-			listener.onTeamItemEditCancelled();
+			listener.onPlayerItemEditCancelled();
 	}
 	/**
 	 * The method that will be executed when the Edit process is 
-	 * accepted. It executes the onTeamItemPreEdit method of the
-	 * set TeamsEditListener listener if set, then if the result
+	 * accepted. It executes the onPlayersItemPreEdit method of the
+	 * set PlayersEditListener listener if set, then if the result
 	 * is positive it persists the new team on the database
 	 * and passes the results to the appropriate method of the 
 	 * listener.
 	 */
 	private void acceptEdit(){
-		team.setName(txtName.getText().toString());
+		player.setName(edtName.getText().toString());
+		player.setNumber(Integer.parseInt(edtNumber.getText().toString()));
 		try {
-			if (listener == null || listener.onTeamItemPreEdit(team))
-				teamsDao.update(team);
+			if (listener == null || listener.onPlayerItemPreEdit(player))
+				playersDao.update(player);
 			if (listener != null)
-				listener.onTeamItemPostEdit(team);
+				listener.onPlayerItemPostEdit(player);
 		} catch (SQLException e) {
 			Log.e(TAG, "Error updating team",e);
 			if (listener != null)
-				listener.onTeamItemEditError(team, e);
+				listener.onPlayerItemEditError(player, e);
 		}
 	}
 	
@@ -189,11 +194,11 @@ public class TeamsEditFragment extends Fragment {
 	 * or the camera. The result must be treated in the 
 	 * onActivityResult method of the fragment.
 	 */
-	private void pickPhoto(){
-		Intent i = new Intent(Intent.ACTION_PICK);
-		i.setType("image/*");
-		startActivityForResult(i, 0);
-	}
+//	private void pickPhoto(){
+//		Intent i = new Intent(Intent.ACTION_PICK);
+//		i.setType("image/*");
+//		startActivityForResult(i, 0);
+//	}
 	
 	/**
 	 * Parses the result of the Intent ACTION_PICK in order
@@ -224,7 +229,7 @@ public class TeamsEditFragment extends Fragment {
 			btnLogo.setImageBitmap(Bitmap.createBitmap(
 					BitmapFactory.decodeFile(path), 0, 0, btnLogo.getWidth(), 
 					btnLogo.getHeight(), null, false));
-			team.setLogo(path);
+			//player.setLogo(path);
 		}else{
 			super.onActivityResult(requestCode, resultCode, data);
 		}
@@ -233,17 +238,17 @@ public class TeamsEditFragment extends Fragment {
 
 
 	/**
-	 * Interface to handle the edit events that happen within the fragment 
+	 * Interface to communicate the edit events that happen within the fragment 
 	 * 
 	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>	
 	 */
-	public interface TeamsEditListener{
-		public boolean onTeamItemPreEdit(Team team);
+	public interface PlayersEditListener{
+		public boolean onPlayerItemPreEdit(Player player);
 		
-		public void onTeamItemPostEdit(Team team);
+		public void onPlayerItemPostEdit(Player player);
 		
-		public void onTeamItemEditError(Team team, Exception e);
+		public void onPlayerItemEditError(Player team, Exception e);
 		
-		public void onTeamItemEditCancelled();
+		public void onPlayerItemEditCancelled();
 	}
 }

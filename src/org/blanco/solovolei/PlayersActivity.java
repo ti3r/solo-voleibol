@@ -1,10 +1,35 @@
+/**
+ * The MIT License
+ * 
+ * Copyright (c) 2012 Alexandro Blanco <ti3r.bubblenet@gmail.com>
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package org.blanco.solovolei;
 
 import org.blanco.solovolei.entities.Player;
 import org.blanco.solovolei.fragments.ActionBar;
 import org.blanco.solovolei.fragments.PlayersAddFragment;
+import org.blanco.solovolei.fragments.PlayersEditFragment;
 import org.blanco.solovolei.fragments.PlayersListFragment;
 import org.blanco.solovolei.fragments.PlayersAddFragment.PlayersAddListener;
+import org.blanco.solovolei.fragments.PlayersEditFragment.PlayersEditListener;
 import org.blanco.solovolei.fragments.PlayersListFragment.PlayersListCommandsListener;
 
 import android.os.Bundle;
@@ -18,7 +43,8 @@ import static org.blanco.solovolei.MainActivity.TAG;
 
 public class PlayersActivity extends FragmentActivity 
 	implements ActionBar.AddCommandHandler
-	, PlayersAddListener, PlayersListCommandsListener
+	, PlayersAddListener, PlayersListCommandsListener,
+	PlayersEditListener
 	{
 	
 	ActionBar actionBar = null;
@@ -26,6 +52,9 @@ public class PlayersActivity extends FragmentActivity
 	PlayersListFragment listFragment = null;
 	/** The fragment in charge of adding players to db */
 	PlayersAddFragment addFragment = null;
+	/** The fragment to edit players */
+	PlayersEditFragment editFragment = null;
+	
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
@@ -49,8 +78,8 @@ public class PlayersActivity extends FragmentActivity
 		
 		//Create a new Add Fragment and add it to the stack
 		addFragment = new PlayersAddFragment();
-		//editFragment = new TeamsEditFragment();
-		//listFragment = new TeamsListFragment();
+		editFragment = new PlayersEditFragment();
+		
 		
 	}
 	
@@ -85,8 +114,7 @@ public class PlayersActivity extends FragmentActivity
 
 	@Override
 	public void onPlayerAdded(Player p) {
-		// TODO Auto-generated method stub
-		
+		setFragmentOnFragmentContainer(listFragment);
 	}
 
 	@Override
@@ -118,85 +146,40 @@ public class PlayersActivity extends FragmentActivity
 
 	@Override
 	public void onPlayerItemDeleteError(Player player, Exception e) {
-		// TODO Auto-generated method stub
+		Log.d(TAG, "Error deleting Player",e);
+		Toast.makeText(getBaseContext(), 
+				getString(R.string.player_delete_error)
+				, Toast.LENGTH_LONG).show();
 		
 	}
-
-	//end of methods of the playerslistcommandslistener interface
 	
-	/*
 	@Override
-	public void onTeamItemSelected(Team item) {
-		//Do nothing
-	}
-
-	@Override
-	public void onTeamItemEditionStarted(Team item) {
-		this.editFragment.setTeam(item);
+	public void onPlayerItemEditionStarted(Player item) {
+		this.editFragment.setPlayer(item);
 		setFragmentOnFragmentContainer(editFragment);
 	}
 
 	@Override
-	public boolean onTeamItemPreDelete(Team team) {
-		//Do nothing and return true to continue with the deletion
+	public boolean onPlayerItemPreEdit(Player player) {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
-	public void onTeamItemPostDelete(Team team) {
-		Toast.makeText(getBaseContext(), "Team Deleted", Toast.LENGTH_LONG).show();
-		//remove the team that has been deleted from the list
-		listFragment.refreshList();
-	}
-	
-	@Override
-	public void onTeamItemDeleteError(Team team, Exception e) {
-		Log.e(TAG, "TeamDeleteError, fragment returned error while deleting team "+team,e);
-		Toast.makeText(getBaseContext(), "Error deleting error", Toast.LENGTH_LONG).show();
-	}
-
-	@Override
-	public boolean onTeamItemPreEdit(Team team) {
-		//do nothing and continue with the edit action
-		return true;
-	}
-
-	@Override
-	public void onTeamItemPostEdit(Team team) {
-		setFragmentOnFragmentContainer(listFragment);
-		listFragment.refreshList();
-	}
-
-	@Override
-	public void onTeamItemEditError(Team team, Exception e) {
-		Log.e(TAG, "TeamDeleteError, fragment returned error while deleting team "+team,e);
-		Toast.makeText(getBaseContext(), "Error deleting error", Toast.LENGTH_LONG).show();
-	}
-
-	@Override
-	public void onTeamItemEditCancelled() {
-		setFragmentOnFragmentContainer(listFragment);
-	}
-	
-	@Override
-	public void onTeamAdded(long id, Team t) {
-		Toast.makeText(PlayersActivity.this.getApplicationContext(),
-				"TeamAdded", Toast.LENGTH_LONG).show();
+	public void onPlayerItemPostEdit(Player player) {
+		//reload the list of players and set the list fragment in the container
+		listFragment.findPlayersAndPopulateList();
 		setFragmentOnFragmentContainer(listFragment);
 	}
 
 	@Override
-	public void onTeamAddingError(Team t, Exception e) {
-		Toast.makeText(PlayersActivity.this.getApplicationContext(),
-				"Error ading the team."+e.getMessage(), Toast.LENGTH_LONG).show();
-		setFragmentOnFragmentContainer(listFragment);
+	public void onPlayerItemEditError(Player team, Exception e) {
+		Toast.makeText(getBaseContext(), getString(R.string.players_edit_error)
+				, Toast.LENGTH_LONG).show();
 	}
 
 	@Override
-	public void onTeamAddingCancel() {
-		Toast.makeText(PlayersActivity.this.getApplicationContext(),
-				"Action Cancelled", Toast.LENGTH_LONG).show();
-		setFragmentOnFragmentContainer(listFragment);	
+	public void onPlayerItemEditCancelled() {
+		setFragmentOnFragmentContainer(listFragment);
 	}
-	*/
 }

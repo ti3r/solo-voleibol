@@ -21,18 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.blanco.solovolei.fragments;
+package org.blanco.solovolei.misc;
+
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 /**
- * Basic interface to mark the Commands Handlers to interact
- * with the Action Bar in the application. The classes must not
- * implement this interface but the extra interfaces in the 
- * jeraquiy in order to handle successfully the commands triggered
- * by the ActionBar class.
- * 
+ * Class that helps with different animations on views
  * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
  *
  */
-public interface ActionBarCommandsHandler {
+public final class Animate {
 
+	/**
+	 * Create a new fade-out animation and applies the animation to the
+	 * passed view
+	 * @param view The View object to animate
+	 */
+	public static void fadeOut(View view){
+		Animation anim = AnimationUtils.loadAnimation(view.getContext(), 
+				android.R.anim.fade_out);
+		view.startAnimation(anim);
+	}
+	/**
+	 * Animate a group a views with the fade-out effect using
+	 * Animate.fadeOut(View view) on each non null view  
+	 * 
+	 * @param views The Array of View objects to animate
+	 */
+	public static void fadeOut(View[] views){
+		for(View v: views){
+			if (v != null)
+				fadeOut(v);
+		}
+	}
 }
