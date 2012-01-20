@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.blanco.solovolei.fragments;
+package org.blanco.solovolei.fragments.players;
 
 import static org.blanco.solovolei.MainActivity.TAG;
 

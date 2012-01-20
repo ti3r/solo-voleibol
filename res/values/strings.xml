@@ -22,4 +22,8 @@
     <string name="player_deleted">Player has been deleted</string>
     <string name="player_delete_error">An error occurred while deleting the player. Try again!</string>
     <string name="players_edit_error">Error editing the player. Try again!</string>
+    <string name="player_add_error">Error saving Player to database. Try Again!!!</string>
+    <string name="player_edit_cancelled">Action cancelled</string>
+    <string name="teams_pick_layout_txt_pick">Select a Team</string>
+    <string name="no_teams_defined">No Teams Defined</string>
 </resources>

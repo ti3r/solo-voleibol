@@ -25,12 +25,12 @@ package org.blanco.solovolei;
 
 import org.blanco.solovolei.entities.Player;
 import org.blanco.solovolei.fragments.ActionBar;
-import org.blanco.solovolei.fragments.PlayersAddFragment;
-import org.blanco.solovolei.fragments.PlayersEditFragment;
-import org.blanco.solovolei.fragments.PlayersListFragment;
-import org.blanco.solovolei.fragments.PlayersAddFragment.PlayersAddListener;
-import org.blanco.solovolei.fragments.PlayersEditFragment.PlayersEditListener;
-import org.blanco.solovolei.fragments.PlayersListFragment.PlayersListCommandsListener;
+import org.blanco.solovolei.fragments.players.PlayersAddFragment;
+import org.blanco.solovolei.fragments.players.PlayersEditFragment;
+import org.blanco.solovolei.fragments.players.PlayersListFragment;
+import org.blanco.solovolei.fragments.players.PlayersAddFragment.PlayersAddListener;
+import org.blanco.solovolei.fragments.players.PlayersEditFragment.PlayersEditListener;
+import org.blanco.solovolei.fragments.players.PlayersListFragment.PlayersListCommandsListener;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -119,8 +119,9 @@ public class PlayersActivity extends FragmentActivity
 
 	@Override
 	public void onPlayerAddingError(Player p, Exception e) {
-		// TODO Auto-generated method stub
-		
+		Log.d(TAG, "Error adding the player to database. Player "+p,e);
+		Toast.makeText(getBaseContext(), 
+				getString(R.string.player_add_error), Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -139,9 +140,9 @@ public class PlayersActivity extends FragmentActivity
 
 	@Override
 	public void onPlayerItemPostDelete(Player player) {
+		listFragment.findPlayersAndPopulateList();
 		Toast.makeText(getBaseContext(), getString(R.string.player_deleted),
 				Toast.LENGTH_SHORT).show();
-		listFragment.findPlayersAndPopulateList();
 	}
 
 	@Override
@@ -162,6 +163,7 @@ public class PlayersActivity extends FragmentActivity
 	@Override
 	public boolean onPlayerItemPreEdit(Player player) {
 		// TODO Auto-generated method stub
+		//do nothing only authorize the edition
 		return true;
 	}
 
@@ -180,6 +182,8 @@ public class PlayersActivity extends FragmentActivity
 
 	@Override
 	public void onPlayerItemEditCancelled() {
+		Toast.makeText(getBaseContext(), 
+				getString(R.string.player_edit_cancelled), Toast.LENGTH_LONG).show();
 		setFragmentOnFragmentContainer(listFragment);
 	}
 }

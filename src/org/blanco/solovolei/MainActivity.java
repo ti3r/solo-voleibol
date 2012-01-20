@@ -24,14 +24,14 @@
 package org.blanco.solovolei;
 
 import org.blanco.solovolei.entities.Team;
-import org.blanco.solovolei.fragments.teams.TeamsAddFragment;
-import org.blanco.solovolei.fragments.teams.TeamsListFragment;
+import org.blanco.solovolei.fragments.TeamsPickFragment.TeamsPickListener;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
+import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity 
+	implements TeamsPickListener{
     
 	/**
 	 * The tag used with Log cat methods. 
@@ -47,28 +47,8 @@ public class MainActivity extends FragmentActivity {
     }
 
 	@Override
-	protected void onStart() {
-		FragmentManager m = getSupportFragmentManager();
-		final TeamsListFragment f = (TeamsListFragment) m.findFragmentById(R.id.main_teams_list_fragment);		
-		TeamsAddFragment fa = (TeamsAddFragment) m.findFragmentById(R.id.main_teams_add_fragment);
-		fa.setListener(new TeamsAddFragment.TeamsAddListener() {
-			
-			@Override
-			public void onTeamAddingError(Team t, Exception e) {
-				
-			}
-			
-			@Override
-			public void onTeamAddingCancel() {
-								
-			}
-			
-			@Override
-			public void onTeamAdded(long id, Team t) {
-				f.refreshList();
-			}
-		});
-		super.onStart();
+	public void onTeamPicked(Team team) {
+		Toast.makeText(this, "Team Picked: "+team, Toast.LENGTH_SHORT).show();
 	}
     
     
