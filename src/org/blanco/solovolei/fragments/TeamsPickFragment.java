@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Team;
+import org.blanco.solovolei.gui.adapters.TeamsSpinnerAdapter;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
@@ -42,7 +43,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
@@ -162,12 +162,13 @@ public class TeamsPickFragment extends Fragment
 		@Override
 		protected void onPostExecute(List<Team> result) {
 			//Create the Adapter for the results; Simple ArrayAdapter is Ok
-			ArrayAdapter<Team> adapter = 
-					new ArrayAdapter<Team>(getActivity(), 
-							android.R.layout.simple_list_item_1,
-							android.R.id.text1,
-							result
-							);
+			//ArrayAdapter<Team> adapter = 
+			//		new ArrayAdapter<Team>(getActivity(), 
+			//				android.R.layout.simple_list_item_1,
+			//				android.R.id.text1,
+			//				result
+			//				);
+			TeamsSpinnerAdapter adapter = new TeamsSpinnerAdapter(result);
 			spnTeams.setAdapter(adapter);			
 			if (progress != null)
 				progress.setVisibility(View.GONE);

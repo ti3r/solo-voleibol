@@ -24,4 +24,8 @@
 	<fragment class="org.blanco.solovolei.fragments.TeamsPickFragment"
         android:id="@+id/main_teams_list_fragment"
         android:layout_width="match_parent" android:layout_height="wrap_content"/>
+	
+	<fragment class="org.blanco.solovolei.fragments.players.PlayersCheckListFragment"
+        android:id="@+id/main_players_checklist_fragment"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
 </LinearLayout>

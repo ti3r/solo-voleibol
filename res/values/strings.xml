@@ -26,4 +26,5 @@
     <string name="player_edit_cancelled">Action cancelled</string>
     <string name="teams_pick_layout_txt_pick">Select a Team</string>
     <string name="no_teams_defined">No Teams Defined</string>
+    <string name="pick_a_team">Pick a Team</string>
 </resources>

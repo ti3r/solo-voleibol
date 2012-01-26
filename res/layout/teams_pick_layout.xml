@@ -26,6 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:fitsSystemWindows="true"
+        android:prompt="@string/pick_a_team"
         android:layout_below="@+id/teams_pick_layout_txt_pick" />
 
 </RelativeLayout>

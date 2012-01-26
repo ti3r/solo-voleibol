@@ -162,7 +162,7 @@ public class PlayersListFragment extends ListFragment {
 	}
 
 	/**
-	 * The async task that will load the teams build the adapter and populate
+	 * The async task that will load the Players build the adapter and populate
 	 * the teams list.
 	 * 
 	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
