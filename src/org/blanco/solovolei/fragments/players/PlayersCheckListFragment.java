@@ -105,6 +105,16 @@ public class PlayersCheckListFragment extends ListFragment
 	
 	//End of Methods of the AsyncLoaderListener interface
 	
+	public List<Player> getSelectedPlayers(){
+		if (getListAdapter() instanceof PlayersCheckListAdapter)
+			return ((PlayersCheckListAdapter) getListAdapter())
+				.getSelected();
+		else{
+			throw new RuntimeException("Unable to retrieve Selected players. " +
+					"Set adapter is not instanceof PlayersCheckListAdapter");
+		}
+	}
+	
 	/**
 	 * Interface to communicate the events occurred within the fragment
 	 * to the rest of the world.

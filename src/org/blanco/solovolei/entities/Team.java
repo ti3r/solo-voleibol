@@ -46,6 +46,15 @@ public class Team {
 	@DatabaseField(dataType=DataType.STRING)
 	private String logo;
 	
+	
+	public Team(){
+		this(null);
+	}
+	
+	public Team(String string) {
+		this.name = string;
+	}
+	
 	/* Getters and Setters */
 	/**
 	 * Retrieves the <code>int</code> id attribute of the object

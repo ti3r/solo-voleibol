@@ -59,6 +59,12 @@ public class TeamsPickFragment extends Fragment
 	Dao<Team, Long> dao = null;
 	TeamsLoader loader = null;
 	TeamsPickListener listener = null;
+	/**
+	 * The boolean flag to mark if the All Teams item must be 
+	 * display in the pick dialog.
+	 * Default value: false
+	 */
+	private boolean displayAllTeamsItem = false ;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -122,8 +128,12 @@ public class TeamsPickFragment extends Fragment
 			long arg3) {
 		//retrieve the team and let the listener handle the event.
 		Object team = arg0.getItemAtPosition(arg2);
-		if (listener != null)
-			listener.onTeamPicked((Team) team);
+		if (listener != null){
+			Team t = (Team) team;
+			//If the team is a valid team return it, if all teams is selected
+			//(if active), return null.
+			listener.onTeamPicked((t.getId() > 0)? t : null);
+		}
 	}
 
 	@Override
@@ -161,13 +171,9 @@ public class TeamsPickFragment extends Fragment
 
 		@Override
 		protected void onPostExecute(List<Team> result) {
-			//Create the Adapter for the results; Simple ArrayAdapter is Ok
-			//ArrayAdapter<Team> adapter = 
-			//		new ArrayAdapter<Team>(getActivity(), 
-			//				android.R.layout.simple_list_item_1,
-			//				android.R.id.text1,
-			//				result
-			//				);
+			//add the All teams item if marked.
+			if (displayAllTeamsItem)
+				result.add(0, new Team(getString(R.string.all_teams_msg)));
 			TeamsSpinnerAdapter adapter = new TeamsSpinnerAdapter(result);
 			spnTeams.setAdapter(adapter);			
 			if (progress != null)

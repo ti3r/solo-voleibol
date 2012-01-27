@@ -28,4 +28,7 @@
 	<fragment class="org.blanco.solovolei.fragments.players.PlayersCheckListFragment"
         android:id="@+id/main_players_checklist_fragment"
         android:layout_width="match_parent" android:layout_height="wrap_content"/>
+	
+	<Button android:id="@+id/main_btn_save" android:layout_width="wrap_content"
+	    android:layout_height="wrap_content" android:text="@string/accept"/>
 </LinearLayout>
