@@ -46,7 +46,7 @@ public class PlayersCheckListAdapter extends ArrayAdapter<Player> {
 		//set the name of the player to be checked
 		chk.setText(getItem(position).getName());
 		//set if the box must be checked according to the previous state
-		chk.setChecked(checks.contains(getItem(position).getId()));
+		chk.setChecked(checks.contains(getItem(position)));
 		//set the listener of the checkbox in order to keep track of the
 		//selected items
 		chk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -70,6 +70,25 @@ public class PlayersCheckListAdapter extends ArrayAdapter<Player> {
 	 */
 	public List<Player> getSelected(){
 		return checks;
+	}
+	
+	/**
+	 * This method adds to the list of checked items the objects
+	 * that match the passed ids in the parameters. This method
+	 * seeks on all the objects present in the adapter in order
+	 * to compare the ids and add the entire object to the list
+	 * of checked objects. 
+	 * Note: It might consume some time depending on the 
+	 * Amount of ids passed
+	 * 
+	 * @param playerIds The ids of the players to be added to 
+	 * the checked list in this batch.
+	 */
+	public void checkOnBatch(List<Long> playerIds){
+		for (int i=0; i < getCount(); i++){
+			if (playerIds.contains(getItem(i).getId()))
+				checks.add(getItem(i));
+		}
 	}
 	
 }

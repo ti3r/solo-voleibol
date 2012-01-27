@@ -13,6 +13,7 @@
         android:maxWidth="75dip"
         android:minHeight="55dip"
         android:minWidth="55dip"
+        android:contentDescription="@string/logo"
         android:src="@android:drawable/ic_menu_slideshow" />
 
     <TextView
@@ -21,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/players_list_item_foto"
         android:layout_toRightOf="@+id/players_list_item_foto"
-        android:text="teams_name"
+        android:text="@string/team_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView

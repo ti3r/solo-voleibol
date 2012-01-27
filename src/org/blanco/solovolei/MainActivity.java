@@ -89,6 +89,8 @@ public class MainActivity extends FragmentActivity
 			break;
 		case R.id.main_players_checklist_fragment:
 			playersCheckListFragment = (PlayersCheckListFragment) fragment;
+			//set the mark items flag to true for the fragment
+			playersCheckListFragment.setMarkRelated(true);
 		default:
 			Log.d(TAG, "Attached fragment has not recognized id. Assigned to no members");
 		}
@@ -97,7 +99,9 @@ public class MainActivity extends FragmentActivity
 	@Override
 	public void onTeamPicked(Team team) {
 		//establish the selected team to a member in order to save the data.
-		relatedTeam = team;
+		relatedTeam = team;		
+		playersCheckListFragment.setRelatedTeam(team);
+		playersCheckListFragment.loadPlayers();
 	}
 
 	@Override
