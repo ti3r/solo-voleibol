@@ -119,7 +119,7 @@ public class RelatePlayersTeamsActivity extends FragmentActivity
 	public void onClick(View arg0) {
 		//Chech the view that has been clicked
 		switch(arg0.getId()){
-		case R.id.main_btn_save:
+		case R.id.rel_play_teams_btn_save:
 				saveRelation();
 			break;
 		default:

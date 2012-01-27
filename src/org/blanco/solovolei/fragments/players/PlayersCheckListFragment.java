@@ -120,6 +120,7 @@ public class PlayersCheckListFragment extends ListFragment
 	}
 
 	//Methods of the AsyncLoaderListener interface
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onLoadComplete(List<Player> results) {
 		//Create the Adapter

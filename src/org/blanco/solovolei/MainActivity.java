@@ -23,43 +23,16 @@
  */
 package org.blanco.solovolei;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import org.blanco.solovolei.entities.Player;
-import org.blanco.solovolei.entities.PlayerTeam;
 import org.blanco.solovolei.entities.Team;
 import org.blanco.solovolei.fragments.TeamsPickFragment.TeamsPickListener;
-import org.blanco.solovolei.fragments.players.PlayersCheckListFragment;
-import org.blanco.solovolei.fragments.players.PlayersCheckListFragment.PlayersCheckListListener;
-import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.DeleteBuilder;
-
 public class MainActivity extends FragmentActivity 
-	implements TeamsPickListener,
-	PlayersCheckListListener, OnClickListener{
+	implements TeamsPickListener{
     
-	Fragment pickTeamsFragment = null;
-	PlayersCheckListFragment playersCheckListFragment = null;
-	Dao<PlayerTeam, Long> dao = null;
-	
-	Button btnSave = null;
-	/**
-	 * The related team that will be associated to the selected 
-	 * players
-	 */
-	Team relatedTeam = null;
 	/**
 	 * The tag used with Log cat methods. 
 	 * The simple name of the application.
@@ -67,89 +40,16 @@ public class MainActivity extends FragmentActivity
 	public static final String TAG = "solo_volei";
 	
 	/** Called when the activity is first created. */
-    @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Get the DAO
-        dao = (Dao<PlayerTeam, Long>) DaoFactory.getDao(this, PlayerTeam.class);
-        
-        setContentView(R.layout.main);        
-        btnSave = (Button) findViewById(R.id.main_btn_save);
-        btnSave.setOnClickListener(this);
+        setContentView(R.layout.main);
     }
 
 	@Override
-	public void onAttachFragment(Fragment fragment) {
-		super.onAttachFragment(fragment);
-		//Check the fragment that has been attached from the XML
-		//and assign it to the corresponding member
-		switch(fragment.getId()){
-		case R.id.main_teams_list_fragment:
-			pickTeamsFragment = fragment;
-			break;
-		case R.id.main_players_checklist_fragment:
-			playersCheckListFragment = (PlayersCheckListFragment) fragment;
-			//set the mark items flag to true for the fragment
-			playersCheckListFragment.setMarkRelated(true);
-		default:
-			Log.d(TAG, "Attached fragment has not recognized id. Assigned to no members");
-		}
-	}
-	/**
-	 * The methods implemented from the TeamsPickListener interface, this method
-	 * will associate the selected Team with the relatedTeam property and will
-	 * launch a reload of the players list.
-	 */
-	@Override
 	public void onTeamPicked(Team team) {
-		//establish the selected team to a member in order to save the data.
-		relatedTeam = team;		
-		playersCheckListFragment.setRelatedTeam(team);
-		playersCheckListFragment.loadPlayers();
-	}
-
-	@Override
-	public void onClick(View arg0) {
-		//Chech the view that has been clicked
-		switch(arg0.getId()){
-		case R.id.main_btn_save:
-				saveRelation();
-			break;
-		default:
-			Log.d(TAG, "onClickMethod did not recognize the id of the clicked view. " +
-					"Event will be ignored. Id:"+arg0.getId());
-		}
+		Toast.makeText(this, "Team Picked: "+team, Toast.LENGTH_SHORT).show();
 	}
     
-	/**
-	 * The method that will relate the selected players with the
-	 * associated team stored in relatedTeam property  
-	 */
-	private void saveRelation(){
-		//TODO sanitize this
-		//delete all the previous relations
-		DeleteBuilder<PlayerTeam, Long> db = dao.deleteBuilder();
-		try {
-			db.where().eq("team_fk", new Integer(relatedTeam.getId()));
-			dao.delete(db.prepare());
-		} catch (SQLException e1) {
-			Log.d(TAG, "Error deleting previous relations for team "+relatedTeam);
-		}
-		
-		//get The list of selected players
-		List<Player> players = playersCheckListFragment.getSelectedPlayers();
-		Log.d(TAG, players.toString());
-		for(Player player: players){
-			PlayerTeam pt = new PlayerTeam(player, relatedTeam);
-			try {
-				dao.create(pt);
-			} catch (SQLException e) {
-				Log.e(TAG, "Error saving: "+pt,e);
-			}
-		}
-		Toast.makeText(getBaseContext(), getString(R.string.players_relation_saved),
-				Toast.LENGTH_LONG).show();
-	}
     
 }
