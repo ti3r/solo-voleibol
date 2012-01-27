@@ -207,6 +207,32 @@ public class PlayersCheckListFragment extends ListFragment
 		this.markRelated = markRelated;
 	}
 
+	/**
+	 * Returns the value of the boolean flag launchLoadOnStart
+	 * that is set in this instance of the fragment. This flag
+	 * marks if the process of loading the players that will be 
+	 * displayed in the fragment should be launched when the 
+	 * onStart method executes.
+	 * 
+	 * @return The boolean value of the launchLoadOnstart flag
+	 */
+	public boolean isLaunchLoadOnStart() {
+		return launchLoadOnStart;
+	}
+
+	/**
+	 * Sets the value of the boolean flag launchLoadOnStart
+	 * that is set in this instance of the fragment. This flag
+	 * marks if the process of loading the players that will be 
+	 * displayed in the fragment should be launched when the 
+	 * onStart method executes.
+	 * 
+	 * @return The boolean value of the launchLoadOnstart flag
+	 */
+	public void setLaunchLoadOnStart(boolean launchLoadOnStart) {
+		this.launchLoadOnStart = launchLoadOnStart;
+	}
+
 
 
 	/**

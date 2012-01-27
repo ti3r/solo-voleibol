@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+	<fragment class="org.blanco.solovolei.fragments.TeamsPickFragment"
+        android:id="@+id/rel_play_teams_teams_spinner_fragment"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+	
+	<fragment class="org.blanco.solovolei.fragments.players.PlayersCheckListFragment"
+        android:id="@+id/rel_play_teams_players_checklist_fragment"
+        android:layout_below="@id/rel_play_teams_teams_spinner_fragment"
+        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+	<Button
+	    android:id="@+id/rel_play_teams_btn_save"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_alignParentRight="true"
+	    android:text="@string/accept" />
+
+</RelativeLayout>

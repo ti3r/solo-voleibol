@@ -28,4 +28,5 @@
     <string name="no_teams_defined">No Teams Defined</string>
     <string name="pick_a_team">Pick a Team</string>
     <string name="all_teams_msg">All Teams</string>
+    <string name="players_relation_saved">The relation of players have been saved!!!</string>
 </resources>

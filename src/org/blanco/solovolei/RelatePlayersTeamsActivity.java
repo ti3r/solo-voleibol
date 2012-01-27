@@ -46,7 +46,7 @@ import android.widget.Toast;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 
-public class MainActivity extends FragmentActivity 
+public class RelatePlayersTeamsActivity extends FragmentActivity 
 	implements TeamsPickListener,
 	PlayersCheckListListener, OnClickListener{
     
@@ -74,8 +74,8 @@ public class MainActivity extends FragmentActivity
         //Get the DAO
         dao = (Dao<PlayerTeam, Long>) DaoFactory.getDao(this, PlayerTeam.class);
         
-        setContentView(R.layout.main);        
-        btnSave = (Button) findViewById(R.id.main_btn_save);
+        setContentView(R.layout.relate_players_teams_layout);        
+        btnSave = (Button) findViewById(R.id.rel_play_teams_btn_save);
         btnSave.setOnClickListener(this);
     }
 
@@ -85,10 +85,10 @@ public class MainActivity extends FragmentActivity
 		//Check the fragment that has been attached from the XML
 		//and assign it to the corresponding member
 		switch(fragment.getId()){
-		case R.id.main_teams_list_fragment:
+		case R.id.rel_play_teams_teams_spinner_fragment:
 			pickTeamsFragment = fragment;
 			break;
-		case R.id.main_players_checklist_fragment:
+		case R.id.rel_play_teams_players_checklist_fragment:
 			playersCheckListFragment = (PlayersCheckListFragment) fragment;
 			//set the mark items flag to true for the fragment
 			playersCheckListFragment.setMarkRelated(true);
@@ -104,9 +104,15 @@ public class MainActivity extends FragmentActivity
 	@Override
 	public void onTeamPicked(Team team) {
 		//establish the selected team to a member in order to save the data.
-		relatedTeam = team;		
-		playersCheckListFragment.setRelatedTeam(team);
-		playersCheckListFragment.loadPlayers();
+		relatedTeam = team;
+		if (playersCheckListFragment != null){
+			playersCheckListFragment.setRelatedTeam(team);
+			playersCheckListFragment.loadPlayers();
+		}else{
+			throw new IllegalStateException("RelatePlayersTeamsActivity.onTeamPicked(). " +
+					"Team has been picked but no " +
+					"playersCheckListFragment is attached. Check your code");
+		}
 	}
 
 	@Override
