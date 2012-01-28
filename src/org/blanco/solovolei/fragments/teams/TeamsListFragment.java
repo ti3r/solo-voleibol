@@ -31,6 +31,7 @@ import java.util.List;
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Team;
 import org.blanco.solovolei.gui.adapters.TeamsListAdapter;
+import org.blanco.solovolei.loaders.TeamsAsyncLoader;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
@@ -54,7 +55,8 @@ import android.widget.ProgressBar;
 
 import com.j256.ormlite.dao.Dao;
 
-public class TeamsListFragment extends Fragment {
+public class TeamsListFragment extends Fragment implements
+	TeamsAsyncLoader.AsyncLoaderListener{
 
 	/** The dao that will be used by the fragment */
 	Dao<Team, Long> teamsDao = null;
@@ -66,7 +68,7 @@ public class TeamsListFragment extends Fragment {
 	boolean deleteEnabled = true;
 	boolean upateEnabled = true;
 	/** the loader that will be used to refresh the list */
-	TeamsLoader loader = null;
+	TeamsAsyncLoader loader = null;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -163,8 +165,21 @@ public class TeamsListFragment extends Fragment {
 		list.setAdapter(null);
 		if (loader != null && loader.getStatus().equals(AsyncTask.Status.RUNNING))
 			loader.cancel(true);
-		loader = new TeamsLoader(teamsDao);
+		loader = new TeamsAsyncLoader(teamsDao,this);
 		loader.execute();
+	}
+	
+	/**
+	 * Method to implement the TeamsAsyncLoader.AsyncLoaderListener onLoadComplete
+	 * method. This method will create the adapter for the list and set it to the 
+	 * fragments list.
+	 * 
+	 * @param teams The List of Teams that were found by the loader
+	 */
+	@Override
+	public void onLoadComplete(List<Team> teams){
+		TeamsListAdapter adapter = new TeamsListAdapter(getActivity(), teams);
+		list.setAdapter(adapter);
 	}
 	
 	/**
@@ -356,44 +371,5 @@ public class TeamsListFragment extends Fragment {
 		public void onTeamItemDeleteError(Team team, Exception e);
 	}
 
-	/**
-	 * The async task that will load the teams build the adapter and populate
-	 * the teams list.
-	 * 
-	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
-	 * 
-	 */
-	private class TeamsLoader extends AsyncTask<Void, Void, ListAdapter> {
-
-		Dao<Team, Long> dao = null;
-
-		public TeamsLoader(Dao<Team, Long> teamsDao) {
-			if (teamsDao == null)
-				throw new IllegalArgumentException("Passed Dao can't be null");
-			dao = teamsDao;
-		}
-
-		@Override
-		protected ListAdapter doInBackground(Void... params) {
-			try {
-				List<Team> teams = dao.queryForAll();
-				TeamsListAdapter adapter = new TeamsListAdapter(getActivity(),
-						teams);
-				return adapter;
-			} catch (SQLException e) {
-				Log.e(TAG,
-						"Error quering the dao for all the teams. Unable to populate the list",
-						e);
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(ListAdapter result) {
-			if (result != null)
-				list.setAdapter(result);
-		}
-
-	}
-
+	
 }
