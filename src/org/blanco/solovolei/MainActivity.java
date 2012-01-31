@@ -23,15 +23,10 @@
  */
 package org.blanco.solovolei;
 
-import org.blanco.solovolei.entities.Team;
-import org.blanco.solovolei.fragments.TeamsPickFragment.TeamsPickListener;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity 
-	implements TeamsPickListener{
+public class MainActivity extends FragmentActivity{
     
 	/**
 	 * The tag used with Log cat methods. 
@@ -46,10 +41,5 @@ public class MainActivity extends FragmentActivity
         setContentView(R.layout.main);
     }
 
-	@Override
-	public void onTeamPicked(Team team) {
-		Toast.makeText(this, "Team Picked: "+team, Toast.LENGTH_SHORT).show();
-	}
-    
-    
+	
 }

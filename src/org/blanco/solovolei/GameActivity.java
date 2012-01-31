@@ -21,54 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.blanco.solovolei.gui.adapters;
+package org.blanco.solovolei;
 
-import java.util.List;
+import static org.blanco.solovolei.MainActivity.TAG;
 
-import org.blanco.solovolei.R;
-import org.blanco.solovolei.entities.Team;
+import org.blanco.solovolei.fragments.game.CourtFragment;
+import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
-public class TeamsSpinnerAdapter extends BaseAdapter {
+public class GameActivity extends FragmentActivity {
 
-	List<Team> teams = null;
+	CourtFragment courtFragment = null;
+	VoleiActionPickerFragment actionPickFragment = null;
 	
-	public TeamsSpinnerAdapter(List<Team> teams) {
-		super();
-		this.teams = teams;
+	@Override
+	protected void onCreate(Bundle arg0) {
+		super.onCreate(arg0);
+		setContentView(R.layout.court_layout);
+		
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null)
-			convertView = LayoutInflater.from(parent.getContext())
-				.inflate(R.layout.teams_spinner_item, null);
-		TextView view = (TextView) convertView.findViewById(R.id.teams_list_item_name);
-		view.setText(((Team)getItem(position)).getName());
-		return convertView;
+	public void onAttachFragment(Fragment fragment) {
+		switch (fragment.getId()) {
+		case R.id.court_layout_court_fragment:
+			courtFragment = (CourtFragment) fragment;
+			break;
+		case R.id.court_layout_action_pick_fragment:
+			actionPickFragment = (VoleiActionPickerFragment) fragment;
+		default:
+			Log.w(TAG, "Attached fragment has not recognized id: "+fragment);
+			break;
+		}
 	}
-
-	@Override
-	public int getCount() {
-		return (teams != null)? teams.size() : 0;
-	}
-
-	@Override
-	public Object getItem(int position) {
-		return (teams != null && position < teams.size())? 
-				teams.get(position):null;
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return (teams != null && position < teams.size())? 
-				teams.get(position).getId():0;
-	}
-
 	
 }

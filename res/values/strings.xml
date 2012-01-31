@@ -29,4 +29,6 @@
     <string name="pick_a_team">Pick a Team</string>
     <string name="all_teams_msg">All Teams</string>
     <string name="players_relation_saved">The relation of players have been saved!!!</string>
+    <string name="spike">Spike</string>
+    <string name="block">Block</string>
 </resources>

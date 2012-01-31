@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"    
+    android:layout_height="match_parent" >
+    
+<fragment android:name="org.blanco.solovolei.fragments.game.CourtFragment"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/court_layout_court_fragment"
+    android:layout_centerInParent="true"/>
+
+<fragment android:name="org.blanco.solovolei.fragments.game.VoleiActionPickerFragment"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:id="@+id/court_layout_action_pick_fragment"
+    android:layout_centerInParent="true"/>
+    
+</RelativeLayout>

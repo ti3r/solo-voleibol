@@ -21,54 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.blanco.solovolei.gui.adapters;
-
-import java.util.List;
+package org.blanco.solovolei.fragments.game;
 
 import org.blanco.solovolei.R;
-import org.blanco.solovolei.entities.Team;
+import org.blanco.solovolei.misc.CourtView;
+import org.blanco.solovolei.misc.VoleiAction;
 
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+/**
+ * The fragment in charge of displaying the court and handle the options 
+ * that are executed using gestures and icons present above the court.
+ * 
+ * @author Alexandro Blanco Santana
+ *
+ */
+public class CourtFragment extends Fragment{
 
-public class TeamsSpinnerAdapter extends BaseAdapter {
-
-	List<Team> teams = null;
+	CourtView view = null;
 	
-	public TeamsSpinnerAdapter(List<Team> teams) {
-		super();
-		this.teams = teams;
-	}
-
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null)
-			convertView = LayoutInflater.from(parent.getContext())
-				.inflate(R.layout.teams_spinner_item, null);
-		TextView view = (TextView) convertView.findViewById(R.id.teams_list_item_name);
-		view.setText(((Team)getItem(position)).getName());
-		return convertView;
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		view = (CourtView) inflater.inflate(R.layout.court, null);
+		return view;
+	}	
+	
+	/**
+	 * Sets the VoleiAction that has been taken place in the
+	 * CourtView of this fragment; 
+	 * 
+	 * @param action The VoleiAction that will be associated 
+	 * with the court
+	 */
+	public void setCourtAction(VoleiAction action){
+		view.setAction(action);
 	}
-
-	@Override
-	public int getCount() {
-		return (teams != null)? teams.size() : 0;
-	}
-
-	@Override
-	public Object getItem(int position) {
-		return (teams != null && position < teams.size())? 
-				teams.get(position):null;
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return (teams != null && position < teams.size())? 
-				teams.get(position).getId():0;
-	}
-
 	
 }
