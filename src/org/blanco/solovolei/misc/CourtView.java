@@ -28,6 +28,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -98,5 +99,22 @@ public class CourtView extends RelativeLayout
 			//this will clear the existing points and will start over
 		}
 	}
+	
+	public void reset(){
+		if (points[0] != null){
+			//TODO sanitize this
+			invalidate(new Rect((int)(points[0].x-paint.getStrokeWidth()),
+					(int)(points[0].y-paint.getStrokeWidth()),
+					(int)(points[0].x+paint.getStrokeWidth()),
+					(int)(points[0].y+paint.getStrokeWidth())));
+			points[0] = null; 
+		}
+		if (points[1] != null){
+			//This should never happen but just in case
+			invalidate(new Rect(points[1].x-5,points[1].y-5,points[1].x+5,points[1].y+5));
+			points[1] = null;
+		}
+	}
+	
 
 }

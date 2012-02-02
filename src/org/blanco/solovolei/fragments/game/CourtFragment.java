@@ -40,7 +40,10 @@ import android.view.ViewGroup;
  *
  */
 public class CourtFragment extends Fragment{
-
+	/**
+	 * The CourtView that will be inflated within the fragment in order
+	 * to let the user register the actions that occurred in the game
+	 */
 	CourtView view = null;
 	
 	@Override
@@ -59,6 +62,13 @@ public class CourtFragment extends Fragment{
 	 */
 	public void setCourtAction(VoleiAction action){
 		view.setAction(action);
+	}
+	/**
+	 * This method will invalidate the current action 
+	 * in the CourtView in order to start over.
+	 */
+	public void resetAction(){
+		view.reset();
 	}
 	
 }

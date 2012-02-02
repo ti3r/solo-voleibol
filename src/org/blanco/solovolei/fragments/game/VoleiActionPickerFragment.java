@@ -25,9 +25,12 @@ package org.blanco.solovolei.fragments.game;
 
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.misc.VoleiAction;
+import static org.blanco.solovolei.MainActivity.TAG;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,10 +49,20 @@ import android.widget.Button;
 public class VoleiActionPickerFragment extends Fragment 
 	implements View.OnClickListener{
 
-	
+	/**
+	 * The button that activates the SPIKE VoleiAction
+	 */
 	private Button btnSpike;
+	/**
+	 * The button that activates the BLOCK VoleiAction
+	 */
 	private Button btnBlock;
-
+	/**
+	 * The VoleiActionListener to communicate the actions
+	 * Occurred within the fragment
+	 */
+	private VoleiActionListener listener = null;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -61,15 +74,32 @@ public class VoleiActionPickerFragment extends Fragment
 		return v;
 	}
 	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		if (listener == null && 
+				!(activity instanceof VoleiActionListener)){
+			throw new IllegalArgumentException("Attached activity does not implement"
+					+" VoleiActionListener and not listener has been set up previously."
+					+" Plase make the activity implement the interface or set up the "
+					+" Correct listener in order to handle the events of the fragment");
+		}else if (listener == null){
+			listener = (VoleiActionListener) activity;
+		}
+	}
 
 	@Override
 	public void onClick(View v) {
-		switch(v.getId()){
-			case  R.id.volei_action_picker_btn_spike:
-				//courtFragment.setCourtAction(VoleiAction.SPIKE);
-				break;
-			case R.id.volei_action_picker_btn_block:
-				//courtFragment.setCourtAction(VoleiAction.BLOCK);
+		if (listener != null){
+			switch(v.getId()){
+				case  R.id.volei_action_picker_btn_spike:
+					listener.onActionPicked(VoleiAction.SPIKE);
+					break;
+				case R.id.volei_action_picker_btn_block:
+					listener.onActionPicked(VoleiAction.BLOCK);
+			}
+		}else{
+			Log.w(TAG, "VoleiAction selected but not listener established to handle it");
 		}
 	}
 	/**
@@ -79,7 +109,11 @@ public class VoleiActionPickerFragment extends Fragment
 	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
 	 *
 	 */
-	interface VoleiActionListener{
+	public interface VoleiActionListener{
+		/**
+		 * Method to be executed when one VoleiAction is selected
+		 * @param action The VoleiAction that has been selected.
+		 */
 		public void onActionPicked(VoleiAction action);
 	}
 }

@@ -32,8 +32,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment.VoleiActionListener;
+import org.blanco.solovolei.misc.VoleiAction;
 
-public class GameActivity extends FragmentActivity {
+public class GameActivity extends FragmentActivity 
+	implements VoleiActionListener{
 
 	CourtFragment courtFragment = null;
 	VoleiActionPickerFragment actionPickFragment = null;
@@ -56,6 +59,16 @@ public class GameActivity extends FragmentActivity {
 		default:
 			Log.w(TAG, "Attached fragment has not recognized id: "+fragment);
 			break;
+		}
+	}
+
+	@Override
+	public void onActionPicked(VoleiAction action) {
+		if (courtFragment != null){
+			courtFragment.resetAction();
+			courtFragment.setCourtAction(action);
+		}else{
+			Log.w(TAG, "VoleiActionPicked but court fragment is not set yet");
 		}
 	}
 	
