@@ -11,6 +11,7 @@
         android:minWidth="55dip" android:minHeight="55dip"
         android:maxWidth="75dip" android:maxHeight="75dip"
         android:layout_alignParentLeft="true"
+        android:contentDescription="@string/logo"
         android:src="@android:drawable/ic_menu_slideshow" />
 
     <TextView
@@ -20,7 +21,7 @@
         android:layout_alignBottom="@+id/team_list_item_logo"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/team_list_item_logo"
-        android:text="teams_name"
+        android:text="@string/team_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

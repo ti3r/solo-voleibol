@@ -23,6 +23,10 @@
  */
 package org.blanco.solovolei.misc;
 
+import static org.blanco.solovolei.MainActivity.TAG;
+
+import java.util.Stack;
+
 import android.R;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -30,17 +34,30 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.RelativeLayout;
-
+/**
+ * The class that will be drawn in the game part of the application
+ * to interact with the user and record all the events that are
+ * happening in the match. It communicates the results to the 
+ * containing parent with the set CourtActionsListener listener;
+ * 
+ * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+ *
+ */
 public class CourtView extends RelativeLayout 
 	implements OnTouchListener{
 
-	Point points[] = new Point[2];
-	Paint paint = null;
-	VoleiAction action = null;
+	private Point points[] = new Point[2];
+	private Paint paint = null;
+	private VoleiAction action = null;
+	private int scoreboard = 0;
+	private int enemyScoreboard = 0;
+	private CourtActionsListener listener = null;
+	Stack<ActionTaken> actionsStack = new Stack<CourtView.ActionTaken>();
 	
 	public CourtView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -80,27 +97,79 @@ public class CourtView extends RelativeLayout
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		boolean drawSomething = false;
 		//Draw the points 
 		if (points[0] != null && points[1] != null){
 			//Draw a line
 			canvas.drawLine(points[0].x, points[0].y, points[1].x, points[1].y, paint);
-			//clear the sequence
+			
+			//Add the action taken to the stack
+			ActionTaken action = new ActionTaken(this.action, points[0],points[1]);
+			actionsStack.push(action);
+			
+			handleScore(actionsStack.peek());
+			
+			//both points taken	clear the sequence
 			points[0] = null; points[1] = null;
-			drawSomething = true;
 		}else if (points[0] != null){
 			//Draw the first point of the sequence
 			canvas.drawPoint(points[0].x, points[0].y, paint);
-			drawSomething = true;
 		}
-		//else draw nothing
-		if (drawSomething){
-			//TODO launch a time out to know if the first point was error or not
-			//this will clear the existing points and will start over
+		
+		//Draw the Scoreboard
+		canvas.drawText(scoreboard+" : "+enemyScoreboard, 10, 10, paint);
+	}
+	
+	/**
+	 * It handles the score of the current match based on the passed
+	 * ActionTaken.
+	 * @param action The ActionTaken object that represents the last
+	 * action taken in the match
+	 */
+	private void handleScore(ActionTaken action){
+		//Two points have been draw, check the action taken and increment the board
+		if(action != null && action.voleiAction.isPointToFavor()){
+			scoreboard++;
+		}else if (this.action != null){
+			enemyScoreboard++;
+		}
+		//finish the game, if the scoreboard is complete
+		if ((Math.abs(scoreboard - enemyScoreboard) >= 2) &&
+			(scoreboard >= 25 ) || (enemyScoreboard >= 25)){
+			if (listener != null)
+				listener.onSetEnded(scoreboard, enemyScoreboard, actionsStack);
+			else
+				Log.w(TAG, "Set ended but not listener is defined");
+			//clear the action stack
+			actionsStack = new Stack<CourtView.ActionTaken>();
+			//reset the board
+			scoreboard = 0; enemyScoreboard = 0;
 		}
 	}
 	
-	public void reset(){
+	/**
+	 * Returns the CourtActionsListener object associated with this 
+	 * view
+	 * @return The CourtActionsListener object associated.
+	 */
+	public CourtActionsListener getCourtActionsListener() {
+		return listener;
+	}
+	
+	/**
+	 * Sets the CourtActionsListener associated with the view. This
+	 * object will be used to communicate the actions that occur in the
+	 * view to the exterior world 
+	 * @param listener The CourtActionsListener object to be associated
+	 */
+	public void setCourtActionsListener(CourtActionsListener listener) {
+		this.listener = listener;
+	}
+
+	/**
+	 * it cancels the current action in the court, it invalidates the points
+	 * that have been drawn so far
+	 */
+	public void cancelCurrentAction(){
 		if (points[0] != null){
 			//TODO sanitize this
 			invalidate(new Rect((int)(points[0].x-paint.getStrokeWidth()),
@@ -111,10 +180,65 @@ public class CourtView extends RelativeLayout
 		}
 		if (points[1] != null){
 			//This should never happen but just in case
-			invalidate(new Rect(points[1].x-5,points[1].y-5,points[1].x+5,points[1].y+5));
+			invalidate(new Rect((int)(points[1].x-paint.getStrokeWidth()),
+					(int)(points[1].y-paint.getStrokeWidth()),
+					(int)(points[1].x+paint.getStrokeWidth()),
+					(int)(points[1].y+paint.getStrokeWidth())));
 			points[1] = null;
 		}
 	}
 	
-
+	/**
+	 * reverts the last action that has been registered in the court. It
+	 * pops the last action from the stack of actions.
+	 */
+	public void revertLastAction(){
+		ActionTaken action = actionsStack.pop();
+		if (action.voleiAction.isPointToFavor()){
+			scoreboard --;
+		}else {
+			enemyScoreboard --;
+		}
+		//invalidate the part of the action if it's still present
+		invalidate(new Rect((int)(action.point.x-paint.getStrokeWidth()),
+				(int)(action.point.y-paint.getStrokeWidth()),
+				(int)(action.point.x+paint.getStrokeWidth()),
+				(int)(action.point.y+paint.getStrokeWidth())));
+	}
+	
+	/***
+	 * Class that represents one action in the volleyball court, this
+	 * related One VoleiAction object with the points (coordinates)
+	 * where it occurred.
+	 * 
+	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+	 */
+	public class ActionTaken{
+		
+		public ActionTaken(VoleiAction action, Point p1, Point p2){
+			this.voleiAction = action;
+			this.point = p1;
+			this.point2 = p2;
+		}
+		
+		public VoleiAction voleiAction = null;
+		public Point point = null;
+		public Point point2 = null;
+	}
+	
+	/**
+	 * The interface that will communicate the events that occur within the court such
+	 * as game ended.
+	 * 
+	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+	 *
+	 */
+	public interface CourtActionsListener{
+		/**
+		 * Event that will be triggered when the set is Over
+		 * @param teamScore The int value of the team score at the end of the set.
+		 * @param foeScore The int value of the enemy team score at the end of the set.
+		 */
+		public void onSetEnded(int teamScore, int foeScore, Stack<ActionTaken> actions);
+	}
 }

@@ -23,8 +23,11 @@
  */
 package org.blanco.solovolei.fragments.game;
 
+import java.util.Stack;
+
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.misc.CourtView;
+import org.blanco.solovolei.misc.CourtView.CourtActionsListener;
 import org.blanco.solovolei.misc.VoleiAction;
 
 import android.os.Bundle;
@@ -32,6 +35,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 /**
  * The fragment in charge of displaying the court and handle the options 
  * that are executed using gestures and icons present above the court.
@@ -39,7 +43,8 @@ import android.view.ViewGroup;
  * @author Alexandro Blanco Santana
  *
  */
-public class CourtFragment extends Fragment{
+public class CourtFragment extends Fragment 
+	implements CourtActionsListener{
 	/**
 	 * The CourtView that will be inflated within the fragment in order
 	 * to let the user register the actions that occurred in the game
@@ -50,6 +55,7 @@ public class CourtFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = (CourtView) inflater.inflate(R.layout.court, null);
+		view.setCourtActionsListener(this);
 		return view;
 	}	
 	
@@ -68,7 +74,15 @@ public class CourtFragment extends Fragment{
 	 * in the CourtView in order to start over.
 	 */
 	public void resetAction(){
-		view.reset();
+		view.cancelCurrentAction();
+	}
+
+	//methods that are needed to implement from the CourtActionsListener
+	//interface
+	
+	@Override
+	public void onSetEnded(int teamScore, int foeScore, Stack<CourtView.ActionTaken> actions) {
+		Toast.makeText(getActivity(), "Set ended", Toast.LENGTH_LONG).show();
 	}
 	
 }

@@ -23,9 +23,11 @@
  */
 package org.blanco.solovolei.fragments.game;
 
-import org.blanco.solovolei.R;
-import org.blanco.solovolei.misc.VoleiAction;
 import static org.blanco.solovolei.MainActivity.TAG;
+
+import org.blanco.solovolei.R;
+import org.blanco.solovolei.misc.ExpandAnimation;
+import org.blanco.solovolei.misc.VoleiAction;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 /**
  * The Fragment in charge of Displaying to the user
@@ -58,10 +61,26 @@ public class VoleiActionPickerFragment extends Fragment
 	 */
 	private Button btnBlock;
 	/**
+	 * The button that activates the BAD_BLOCK VoleiAction
+	 */
+	private Button btnBadBlock;
+	/**
+	 * The button at the border of the fragment to hide and
+	 * show the fragment
+	 */
+	private ImageButton btnShowHide;
+	
+	/**
 	 * The VoleiActionListener to communicate the actions
 	 * Occurred within the fragment
 	 */
 	private VoleiActionListener listener = null;
+	
+	/**
+	 * The initial height of the Fragment's view in order to 
+	 * handle the show hide functionality
+	 */
+	private int initialHeight = -1;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,9 +90,17 @@ public class VoleiActionPickerFragment extends Fragment
 		btnSpike.setOnClickListener(this);
 		btnBlock = (Button) v.findViewById(R.id.volei_action_picker_btn_block);
 		btnBlock.setOnClickListener(this);
+		btnBadBlock = (Button) v.findViewById(R.id.volei_action_picker_btn_bad_block);
+		btnBadBlock.setOnClickListener(this);
+		btnShowHide = (ImageButton) v.findViewById(R.id.volei_action_picker_btn_show_hide);
+		btnShowHide.setOnClickListener(this);
+		
 		return v;
 	}
 	
+
+
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -97,11 +124,43 @@ public class VoleiActionPickerFragment extends Fragment
 					break;
 				case R.id.volei_action_picker_btn_block:
 					listener.onActionPicked(VoleiAction.BLOCK);
+					break;
+				case R.id.volei_action_picker_btn_bad_block:
+					listener.onActionPicked(VoleiAction.BAD_BLOCK);
+					break;
+				case R.id.volei_action_picker_btn_show_hide:
+					//execute show and hide logic
+					showHide();
+					break;
 			}
 		}else{
 			Log.w(TAG, "VoleiAction selected but not listener established to handle it");
 		}
 	}
+	
+	/**
+	 * Method to decrease and increase the height of the fragments view
+	 * in order to hide and show the actions.
+	 */
+	private void showHide(){
+		//the initial height has not been initialized yet. Save it
+		if (initialHeight == -1){
+			initialHeight = getView().getHeight();
+			Log.d(TAG, "Initial height of the view: "+initialHeight);
+		}
+		ExpandAnimation anim = new ExpandAnimation(getView(), getView().getHeight(), 
+				(initialHeight != getView().getHeight())? initialHeight : 25);
+		getView().setAnimation(anim);
+		getView().animate();
+		//Change the icon of the button
+		btnShowHide.setImageDrawable(getResources().getDrawable(
+				(initialHeight != getView().getHeight())?
+				android.R.drawable.arrow_up_float:
+				android.R.drawable.arrow_down_float));
+		
+	}
+	
+	
 	/**
 	 * The interface to communicate the events that occur within
 	 * this fragment with the outside world.

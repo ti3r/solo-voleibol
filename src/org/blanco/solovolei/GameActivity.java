@@ -27,24 +27,29 @@ import static org.blanco.solovolei.MainActivity.TAG;
 
 import org.blanco.solovolei.fragments.game.CourtFragment;
 import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment;
+import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment.VoleiActionListener;
+import org.blanco.solovolei.misc.VoleiAction;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment.VoleiActionListener;
-import org.blanco.solovolei.misc.VoleiAction;
 
 public class GameActivity extends FragmentActivity 
 	implements VoleiActionListener{
 
+	/**
+	 * The String action name used to launch the activity
+	 */
+	public static final String INTENT_ACTION = "org.blanco.solovolei.GAME";
+	
 	CourtFragment courtFragment = null;
 	VoleiActionPickerFragment actionPickFragment = null;
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
-		setContentView(R.layout.court_layout);
+		setContentView(R.layout.game_layout);
 		
 	}
 

@@ -23,10 +23,19 @@
  */
 package org.blanco.solovolei;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-
-public class MainActivity extends FragmentActivity{
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+/**
+ * The principal activity of the application
+ * 
+ * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+ */
+public class MainActivity extends FragmentActivity
+	implements OnClickListener{
     
 	/**
 	 * The tag used with Log cat methods. 
@@ -34,12 +43,36 @@ public class MainActivity extends FragmentActivity{
 	 */
 	public static final String TAG = "solo_volei";
 	
+	private Button btnStartGame = null;
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        init();
     }
-
+    /**
+     * Inits the properties of this class
+     */
+    private void init(){
+    	btnStartGame = (Button) findViewById(R.id.main_btn_start_game);
+    	btnStartGame.setOnClickListener(this);
+    }
+	/**
+	 * The on click implementation that will handle the clicks
+	 * of the buttons for this activity 
+	 * @param v The View that has been clicked
+	 */
+    @Override
+	public void onClick(View v) {
+		switch(v.getId()){
+			case R.id.main_btn_start_game:
+			Intent i = new Intent(GameActivity.INTENT_ACTION);
+			startActivity(i);
+			break;
+		}
+		
+	}
 	
 }

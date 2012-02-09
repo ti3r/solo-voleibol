@@ -59,7 +59,8 @@ import com.j256.ormlite.dao.Dao;
  * @author Alexandro Blanco <ti3r.bubblenet@gmail.com> 
  *
  */
-public class TeamsEditFragment extends Fragment {
+public class TeamsEditFragment extends Fragment 
+	implements View.OnClickListener{
 
 	/** the Team object to be edited */
 	Team team = null;
@@ -68,10 +69,10 @@ public class TeamsEditFragment extends Fragment {
 	TeamsEditListener listener = null;
 	
 	/* GUI controls*/
-	EditText txtName = null;
-	Button accept = null;
-	Button cancel = null;
-	ImageButton btnLogo = null;
+	private EditText txtName = null;
+	private Button accept = null;
+	private Button cancel = null;
+	private ImageButton btnLogo = null;
 	/* end of GUI controls */
 	
 	@SuppressWarnings("unchecked")
@@ -80,6 +81,7 @@ public class TeamsEditFragment extends Fragment {
 		teamsDao = (Dao<Team, Long>) DaoFactory.getDao(getActivity(), Team.class);
 		super.onCreate(savedInstanceState);
 	}
+
 	/**
 	 * Set the Team object to be edited and persisted to the database.
 	 * 
@@ -111,27 +113,16 @@ public class TeamsEditFragment extends Fragment {
 		txtName = (EditText) v.findViewById(R.id.teams_edit_edt_name);
 		txtName.setText(team.getName());
 		accept = (Button) v.findViewById(R.id.teams_edit_btn_accept);
-		accept.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				acceptEdit();
-			}
-		});
+		accept.setOnClickListener(this);
 		cancel = (Button) v.findViewById(R.id.teams_edit_btn_cancel);
-		cancel.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				cancelEdit();
-			}
-		});
+		cancel.setOnClickListener(this);
 		btnLogo = (ImageButton) 
 				v.findViewById(R.id.teams_edit_layout_btn_logo);
-		btnLogo.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				pickPhoto();
-			}
-		});
+		btnLogo.setOnClickListener(this);
+		//Load the values from the bundle if exist
+		if (savedInstanceState != null){
+			txtName.setText(savedInstanceState.getString("name"));
+		}
 		return v;
 	}
 	
@@ -190,6 +181,7 @@ public class TeamsEditFragment extends Fragment {
 	 * onActivityResult method of the fragment.
 	 */
 	private void pickPhoto(){
+		//TODO finish implementing this.
 		Intent i = new Intent(Intent.ACTION_PICK);
 		i.setType("image/*");
 		startActivityForResult(i, 0);
@@ -245,5 +237,24 @@ public class TeamsEditFragment extends Fragment {
 		public void onTeamItemEditError(Team team, Exception e);
 		
 		public void onTeamItemEditCancelled();
+	}
+
+
+	//Method of the OnClickListener interface in order to keep 
+	//trach of the touch events within the fragment (ex. buttons)
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.teams_edit_btn_accept:
+			acceptEdit();
+			break;
+		case R.id.teams_edit_btn_cancel:
+			cancelEdit();
+			break;
+		default:
+			Log.i(TAG, "Touch event registered and no id of buttons " +
+					"match. Event Ignored");
+			break;
+		}
 	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" >
 
 <Button
     android:id="@+id/volei_action_picker_btn_spike"
@@ -19,5 +19,22 @@
     android:layout_alignParentTop="true"
     android:layout_toRightOf="@+id/volei_action_picker_btn_spike"
     android:text="@string/block" />
+
+<Button
+    android:id="@+id/volei_action_picker_btn_bad_block"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_toRightOf="@+id/volei_action_picker_btn_block"
+    android:text="@string/bad_block" />
+
+<ImageButton
+    android:id="@+id/volei_action_picker_btn_show_hide"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentTop="true"
+    android:contentDescription="@string/show_hide_desc"
+    android:src="@android:drawable/arrow_up_float" />
 
 </RelativeLayout>

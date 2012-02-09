@@ -73,6 +73,7 @@ public class TeamsAddFragment extends Fragment
 		dao = (Dao<Team, Long>) DaoFactory.getDao(getActivity(), Team.class);
 		super.onCreate(savedInstanceState);
 	}
+	
 	/**
 	 * Creates the view to be displayed ot the user in order to create a new
 	 * team in the database.

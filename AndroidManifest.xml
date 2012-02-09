@@ -39,6 +39,7 @@
             android:screenOrientation="landscape">
         	<intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+                <action android:name="org.blanco.solovolei.GAME"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
