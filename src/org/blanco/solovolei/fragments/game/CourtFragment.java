@@ -23,12 +23,17 @@
  */
 package org.blanco.solovolei.fragments.game;
 
+import java.sql.SQLException;
 import java.util.Stack;
 
 import org.blanco.solovolei.R;
+import org.blanco.solovolei.entities.Set;
 import org.blanco.solovolei.misc.CourtView;
 import org.blanco.solovolei.misc.CourtView.CourtActionsListener;
 import org.blanco.solovolei.misc.VoleiAction;
+import org.blanco.solovolei.providers.dao.DaoFactory;
+
+import com.j256.ormlite.dao.Dao;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -50,7 +55,15 @@ public class CourtFragment extends Fragment
 	 * to let the user register the actions that occurred in the game
 	 */
 	CourtView view = null;
+	Dao<Set, Long> dao = null;
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		dao = (Dao<Set, Long>) DaoFactory.getDao(getActivity(), Set.class);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -83,6 +96,17 @@ public class CourtFragment extends Fragment
 	@Override
 	public void onSetEnded(int teamScore, int foeScore, Stack<CourtView.ActionTaken> actions) {
 		Toast.makeText(getActivity(), "Set ended", Toast.LENGTH_LONG).show();
+		//save the set and actions
+		Set s = new Set();
+		s.setDate(System.currentTimeMillis());
+		s.setEnemyScore(foeScore);
+		s.setScore(teamScore);
+		try {
+			dao.createOrUpdate(s);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

@@ -78,6 +78,7 @@ public class SoloVoleiSQLiteOpenHelper extends OrmLiteSqliteOpenHelper {
 			db.execSQL("CREATE TABLE TEAMS (_id  INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, logo BLOB );");
 			db.execSQL("CREATE TABLE PLAYERS (_id  INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL,number INTEGER NOT NULL);");
 			db.execSQL("CREATE TABLE PLAYER_OF_TEAM(_id INTEGER PRIMARY KEY AUTOINCREMENT, player_fk INTEGER, team_fk INTEGER);");
+			db.execSQL("CREATE TABLE SETS(_id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, score INTEGER, enemy_score INTEGER);");
 			//copyBasicDataBase(path);
 		}catch(SQLiteException e){
 			Log.e(TAG, "Error creating the database from the base",e);
