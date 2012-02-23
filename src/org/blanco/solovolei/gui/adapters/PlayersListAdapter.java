@@ -51,20 +51,39 @@ public class PlayersListAdapter extends ArrayAdapter<Player> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null)
-			convertView = LayoutInflater.from(getContext())
-				.inflate(R.layout.players_list_item, null);
-		//map the data to the view 
-		final TextView name = 
-		((TextView)convertView.findViewById(R.id.players_list_item_name));
-			name.setText(getItem(position).getName());
+		ViewHolder holder = null;
 		
-		final TextView num = 
-				((TextView)convertView.findViewById(R.id.players_list_item_number));
-		num.setText(String.valueOf(getItem(position).getNumber()));
-			
+		if (convertView == null){
+			convertView = LayoutInflater.from(getContext())
+					.inflate(R.layout.players_list_item, null);
+			holder = new ViewHolder();
+			holder.name = ((TextView)convertView.
+					findViewById(R.id.players_list_item_name));
+			holder.num = ((TextView)convertView.
+					findViewById(R.id.players_list_item_number));
+			//Add the holder to the tag of the object
+			convertView.setTag(holder);
+		}else{
+			//retrieve the ViewHolder from the tag
+			holder = (ViewHolder) convertView.getTag();
+		}
+		//Set the properties of the view
+		holder.name.setText(getItem(position).getName());		
+		holder.num.setText(String.valueOf(getItem(position).getNumber()));
 		
 		return convertView;
 	}	
+
+	/**
+	 * The ViewHolder class to improve the performance of the 
+	 * adapter when building and displaying the views of this
+	 * adapter. This avoid unnecessary call to findViewById
+	 * 
+	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+	 */
+	static class ViewHolder{
+		TextView name = null;
+		TextView num = null;
+	}
 	
 }

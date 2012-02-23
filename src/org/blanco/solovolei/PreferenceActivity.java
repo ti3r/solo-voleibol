@@ -21,30 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.blanco.solovolei.misc;
 
+package org.blanco.solovolei;
 
-
+import android.os.Bundle;
 /**
- * The enumeration that represents the possible actions
- * that can occur on a volleyball court.
+ * The activity in charge of handling the preferences of the application
+ * It load the preferences from the settings.xml XML file and displays 
+ * the settings to the user. The class also holds static constants to
+ * access the preference keys programatically.
  * 
  * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
  *
  */
-public enum VoleiAction {
+public class PreferenceActivity 
+	extends android.preference.PreferenceActivity {
+
+	/**
+	 * The key used to store the preference of the color for
+	 * the good actions happened in the court view
+	 */
+	public static final String PREF_COURT_GOOD_ACTION_COLOR_KEY = 
+			"prefs_volei_action_favor_colors";
 	
-	SPIKE (true),
-	BLOCK (true), 
-	BAD_BLOCK (false);
+	/**
+	 * The key used to store the preference of the color for
+	 * the bad actions happened in the court view
+	 */
+	public static final String PREF_COURT_BAD_ACTION_COLOR_KEY = 
+			"prefs_volei_action_con_colors";
+	/**
+	 * The key used to store the preference of the number of 
+	 * sets per match used in the application
+	 */
+	public static final String PREF_SETS_BY_MATCH = 
+			"pref_sets_by_match";
 	
-	private boolean pointToFavor = true;
-	
-	VoleiAction(boolean favor){
-		this.pointToFavor = favor;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addPreferencesFromResource(R.xml.preference);
 	}
 	
-	public boolean isPointToFavor(){
-		return this.pointToFavor;
-	}
 }

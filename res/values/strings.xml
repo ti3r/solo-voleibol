@@ -34,4 +34,5 @@
     <string name="bad_block">Bad Block</string>
     <string name="start_game">Start Match</string>
     <string name="show_hide_desc">Show Hide</string>
+    <string name="prefs_match">Match Preference</string>
 </resources>

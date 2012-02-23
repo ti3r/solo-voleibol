@@ -33,14 +33,14 @@ import org.blanco.solovolei.misc.CourtView.CourtActionsListener;
 import org.blanco.solovolei.misc.VoleiAction;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
-import com.j256.ormlite.dao.Dao;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.j256.ormlite.dao.Dao;
 /**
  * The fragment in charge of displaying the court and handle the options 
  * that are executed using gestures and icons present above the court.
@@ -55,7 +55,15 @@ public class CourtFragment extends Fragment
 	 * to let the user register the actions that occurred in the game
 	 */
 	CourtView view = null;
+	/**
+	 * The dao to save the sets of the game
+	 */
 	Dao<Set, Long> dao = null;
+	/**
+	 * 
+	 */
+	private int sets = 0;
+	private int foeSets = 0;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -96,17 +104,47 @@ public class CourtFragment extends Fragment
 	@Override
 	public void onSetEnded(int teamScore, int foeScore, Stack<CourtView.ActionTaken> actions) {
 		Toast.makeText(getActivity(), "Set ended", Toast.LENGTH_LONG).show();
+		try {
+			saveSet(teamScore, foeScore, actions);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		handleSets(teamScore, foeScore);
+	}
+	
+	private void handleSets(int teamScore, int foeScore) {
+		if (teamScore > foeScore){
+			sets++;
+		} else {
+			foeSets ++;
+		}
+		if (sets == 3 || foeSets == 3){
+			//Game Ended Deactivate the view.
+			Toast.makeText(getActivity(), "Game Ended!!!!", Toast.LENGTH_LONG).show();
+			view.setActivated(false);
+			view.invalidate();
+		}
+	}
+
+	/**
+	 * Save the results of a set in the database using the established dao of the fragment
+	 * 
+	 * @param teamScore the int Score of the team
+	 * @param foeScore The int Score of the foe team
+	 * @param actions The CourtView.ActionTaken stack of operations that ocurred during the
+	 * set
+	 * 
+	 * @throws SQLException If something wrong happens during the Set.
+	 */
+	private void saveSet(int teamScore, int foeScore, Stack<CourtView.ActionTaken> actions)
+		throws SQLException{
 		//save the set and actions
 		Set s = new Set();
 		s.setDate(System.currentTimeMillis());
 		s.setEnemyScore(foeScore);
 		s.setScore(teamScore);
-		try {
-			dao.createOrUpdate(s);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		dao.createOrUpdate(s);
 	}
 	
 }

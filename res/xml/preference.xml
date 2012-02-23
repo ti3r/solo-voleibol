@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:shouldDisableView="false" android:enabled="true" android:orderingFromXml="false" android:title="@string/prefs_match">
+        <ListPreference 
+            android:dialogTitle="@string/prefs_match" 
+            android:dialogMessage="@string/pref_sets_by_match_header" 
+            android:entries="@array/prefs_sets_by_match"
+            android:entryValues="@array/prefs_sets_by_match"
+            android:selectable="true" 
+            android:title="@string/pref_sets_by_match_header" 
+            android:negativeButtonText="@string/cancel" 
+            android:positiveButtonText="@string/accept" 
+            android:dialogIcon="@drawable/ic_launcher"
+            android:enabled="true" 
+            android:dialogLayout="@android:layout/simple_list_item_1"
+            android:key="pref_sets_by_match"/>
+        
+    </PreferenceCategory>
+    <PreferenceCategory android:orderingFromXml="true" android:title="@string/pref_volei_actions_preference">
+        
+        <ListPreference android:dialogTitle="@string/prefs_favor_action_color" 
+            android:dialogMessage="@string/prefs_pick_a_color_msg" 
+            android:title="@string/prefs_volei_action_color_good" 
+            android:negativeButtonText="@string/cancel" 
+            android:positiveButtonText="@string/accept" 
+            android:key="prefs_volei_action_favor_colors" 
+            android:selectable="true" android:enabled="true" 
+            android:entryValues="@array/prefs_court_action_color_values"
+            android:dialogLayout="@android:layout/simple_list_item_1" 
+            android:entries="@array/prefs_court_action_color_names" 
+            android:dialogIcon="@drawable/ic_launcher"/>
+        <ListPreference android:dialogTitle="@string/prefs_con_action_color" 
+            android:dialogMessage="@string/prefs_pick_a_color_msg" 
+            android:title="@string/prefs_con_action_color" 
+            android:negativeButtonText="@string/cancel" 
+            android:positiveButtonText="@string/accept" 
+            android:key="prefs_volei_action_con_colors" 
+            android:selectable="true" android:enabled="true" 
+            android:entryValues="@array/prefs_court_action_color_values" 
+            android:entries="@array/prefs_court_action_color_names"
+            android:dialogLayout="@android:layout/simple_list_item_1" 
+            android:dialogIcon="@drawable/ic_launcher"/>
+        
+    </PreferenceCategory>
+    
+
+</PreferenceScreen>

@@ -58,6 +58,7 @@ public class MainActivity extends FragmentActivity
     private void init(){
     	btnStartGame = (Button) findViewById(R.id.main_btn_start_game);
     	btnStartGame.setOnClickListener(this);
+    	((Button)findViewById(R.id.main_btn_preference)).setOnClickListener(this);
     }
 	/**
 	 * The on click implementation that will handle the clicks
@@ -71,6 +72,9 @@ public class MainActivity extends FragmentActivity
 			Intent i = new Intent(GameActivity.INTENT_ACTION);
 			startActivity(i);
 			break;
+			case R.id.main_btn_preference:
+				Intent i2 = new Intent(this,PreferenceActivity.class);
+				startActivity(i2);
 		}
 		
 	}

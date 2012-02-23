@@ -47,8 +47,22 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
  *
  */
 public class PlayersCheckListAdapter extends ArrayAdapter<Player> {
-
+	/**
+	 * The List of Player Objects that will be displayed for checking
+	 */
 	private List<Player> checks = null;
+	
+	/**
+	 * The ViewHolder class to improve the performance of the 
+	 * adapter when building and displaying the views of this
+	 * adapter. This avoid unnecessary call to findViewById
+	 * 
+	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+	 */
+	static class ViewHolder{
+		CheckBox chk = null;
+		
+	}
 	
 	public PlayersCheckListAdapter(Context context, List<Player> objects) {
 		//Do not set the text view and resources ids because createView will
@@ -60,19 +74,25 @@ public class PlayersCheckListAdapter extends ArrayAdapter<Player> {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		if (convertView == null)
+		ViewHolder holder = null;
+		if (convertView == null){
 			convertView = LayoutInflater.from(parent.getContext())
 				.inflate(R.layout.players_ckeck_list_item, null);
-		
-		CheckBox chk = (CheckBox) convertView
-				.findViewById(R.id.players_check_list_item_check_box);
+			holder = new ViewHolder();
+			holder.chk = (CheckBox) convertView
+					.findViewById(R.id.players_check_list_item_check_box);
+			convertView.setTag(holder);
+		}else{
+			//Get the holder of the view
+			holder = (ViewHolder) convertView.getTag();
+		}
 		//set the name of the player to be checked
-		chk.setText(getItem(position).getName());
+		holder.chk.setText(getItem(position).getName());
 		//set if the box must be checked according to the previous state
-		chk.setChecked(checks.contains(getItem(position)));
+		holder.chk.setChecked(checks.contains(getItem(position)));
 		//set the listener of the checkbox in order to keep track of the
 		//selected items
-		chk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		holder.chk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) //Append the id to the checked list

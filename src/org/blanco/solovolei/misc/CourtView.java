@@ -27,12 +27,16 @@ import static org.blanco.solovolei.MainActivity.TAG;
 
 import java.util.Stack;
 
+import org.blanco.solovolei.PreferenceActivity;
+
 import android.R;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -58,6 +62,10 @@ public class CourtView extends RelativeLayout
 	private int enemyScoreboard = 0;
 	private CourtActionsListener listener = null;
 	Stack<ActionTaken> actionsStack = new Stack<CourtView.ActionTaken>();
+	private boolean activated = true;
+	
+	private int goodPointColor = Color.GREEN;
+	private int badPointColor = Color.RED;
 	
 	public CourtView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -66,13 +74,19 @@ public class CourtView extends RelativeLayout
 		//The default action is spike. Volei standards says you
 		//should start receiving the ball and make a spike.
 		action = VoleiAction.SPIKE;
-				
+		//Parse the colors of the actions from the properties
+		String bColor = PreferenceManager.getDefaultSharedPreferences(context)
+			.getString(PreferenceActivity.PREF_COURT_BAD_ACTION_COLOR_KEY,"#FF0000");
+		String gColor = PreferenceManager.getDefaultSharedPreferences(context)
+				.getString(PreferenceActivity.PREF_COURT_GOOD_ACTION_COLOR_KEY,"#00FF00");
+		goodPointColor = Color.parseColor(gColor);
+		badPointColor = Color.parseColor(bColor);
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		paint.setColor(action.getColor());
+		paint.setColor((action.isPointToFavor())? goodPointColor : badPointColor);
+		//Set the Stroke Width
 		paint.setStrokeWidth(3.5f);
-		
 	}
-
+	
 	/**
 	 * Sets the current action that has happened on the court
 	 * @param action The VoleiAction to relate to the court
@@ -80,23 +94,34 @@ public class CourtView extends RelativeLayout
 	public void setAction(VoleiAction action){
 		this.action = action;
 		//update paint color
-		paint.setColor(action.getColor());
+		paint.setColor((action.isPointToFavor())? goodPointColor : badPointColor);
 	}
 	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		Point p = new Point();
-		if (event.getAction() == MotionEvent.ACTION_UP){
-			p.set((int)event.getX(), (int)event.getY());
-			points[(points[0] == null)?0:1] = p;
-			v.invalidate();
-		}
-		return true;
+		if (activated){
+			Point p = new Point();
+			if (event.getAction() == MotionEvent.ACTION_UP){
+				p.set((int)event.getX(), (int)event.getY());
+				points[(points[0] == null)?0:1] = p;
+				v.invalidate();
+			}
+			return true;
+		}else
+			return false;
 	}
 
+	/**
+	 * The on draw method that will handle the necessary
+	 * actions to draw the actions that have taken place
+	 * 
+	 */
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+		if (!activated){
+			setBackgroundColor(Color.BLACK);
+		}else{
 		//Draw the points 
 		if (points[0] != null && points[1] != null){
 			//Draw a line
@@ -114,9 +139,9 @@ public class CourtView extends RelativeLayout
 			//Draw the first point of the sequence
 			canvas.drawPoint(points[0].x, points[0].y, paint);
 		}
-		
 		//Draw the Scoreboard
 		canvas.drawText(scoreboard+" : "+enemyScoreboard, 10, 10, paint);
+		}
 	}
 	
 	/**
@@ -204,6 +229,14 @@ public class CourtView extends RelativeLayout
 				(int)(action.point.y-paint.getStrokeWidth()),
 				(int)(action.point.x+paint.getStrokeWidth()),
 				(int)(action.point.y+paint.getStrokeWidth())));
+	}
+	
+	/**
+	 * Sets the activated property of the view in order to know if
+	 * user can iteract with the view.
+	 */
+	public void setActivated(boolean activated){
+		this.activated = activated;
 	}
 	
 	/***

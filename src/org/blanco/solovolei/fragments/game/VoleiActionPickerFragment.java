@@ -151,7 +151,7 @@ public class VoleiActionPickerFragment extends Fragment
 		ExpandAnimation anim = new ExpandAnimation(getView(), getView().getHeight(), 
 				(initialHeight != getView().getHeight())? initialHeight : 25);
 		getView().setAnimation(anim);
-		getView().animate();
+		getView().startAnimation(anim);
 		//Change the icon of the button
 		btnShowHide.setImageDrawable(getResources().getDrawable(
 				(initialHeight != getView().getHeight())?

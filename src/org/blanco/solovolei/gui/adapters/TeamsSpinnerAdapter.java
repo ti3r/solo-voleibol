@@ -45,11 +45,21 @@ public class TeamsSpinnerAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null)
+		ViewHolder holder = null;
+		if (convertView == null){
 			convertView = LayoutInflater.from(parent.getContext())
 				.inflate(R.layout.teams_spinner_item, null);
-		TextView view = (TextView) convertView.findViewById(R.id.teams_list_item_name);
-		view.setText(((Team)getItem(position)).getName());
+			holder = new ViewHolder();
+			holder.name = (TextView) convertView.
+					findViewById(R.id.teams_list_item_name);
+			//Add the holder to the tag of the object
+			convertView.setTag(holder);
+		}else{
+			//retrieve the holder view for the object
+			holder = (ViewHolder) convertView.getTag();
+		}
+		//Set the properties of the view
+		holder.name.setText(((Team)getItem(position)).getName());
 		return convertView;
 	}
 
@@ -70,5 +80,14 @@ public class TeamsSpinnerAdapter extends BaseAdapter {
 				teams.get(position).getId():0;
 	}
 
-	
+	/**
+	 * The ViewHolder class to improve the performance of the 
+	 * adapter when building and displaying the views of this
+	 * adapter. This avoid unnecessary call to findViewById
+	 * 
+	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+	 */
+	static class ViewHolder{
+		TextView name = null;
+	}
 }

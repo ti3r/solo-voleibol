@@ -54,24 +54,44 @@ public class TeamsListAdapter extends ArrayAdapter<Team> {
 
 	@Override
 public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null)
+		ViewHolder holder = null;
+		if (convertView == null){
 			convertView = LayoutInflater.from(getContext())
 				.inflate(R.layout.teams_list_item, null);
+			holder = new ViewHolder();
+			holder.name = (TextView)convertView
+					.findViewById(R.id.teams_list_item_name);
+			holder.img = (ImageView)convertView
+					.findViewById(R.id.team_list_item_logo); 
+			//Add the holder to the tag of the object
+			convertView.setTag(holder);
+		}else{
+			//retrieve the view holder of the object
+			holder = (ViewHolder) convertView.getTag();
+		}
 		//map the data to the view 
-		((TextView)convertView.findViewById(R.id.teams_list_item_name))
-			.setText(getItem(position).getName());
+		holder.name.setText(getItem(position).getName());
 		//If the team has a specified logo replace the image view bitmap with
 		//the bitmap of the object
 		if ((getItem(position).getLogo() != null)){
-			final ImageView img =
-			((ImageView)convertView.findViewById(R.id.team_list_item_logo));
-			
-			img.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeFile(
+			holder.img.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeFile(
 					getItem(position).getLogo()), 0, 0, 25, 25)
 					);
 		}
 		
 		return convertView;
 	}	
+
+	/**
+	 * The ViewHolder class to improve the performance of the 
+	 * adapter when building and displaying the views of this
+	 * adapter. This avoid unnecessary call to findViewById
+	 * 
+	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+	 */
+	static class ViewHolder{
+		TextView name = null;
+		ImageView img = null;
+	}
 	
 }
