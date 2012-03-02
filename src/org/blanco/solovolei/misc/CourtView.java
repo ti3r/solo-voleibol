@@ -139,8 +139,6 @@ public class CourtView extends RelativeLayout
 			//Draw the first point of the sequence
 			canvas.drawPoint(points[0].x, points[0].y, paint);
 		}
-		//Draw the Scoreboard
-		canvas.drawText(scoreboard+" : "+enemyScoreboard, 10, 10, paint);
 		}
 	}
 	
@@ -157,6 +155,7 @@ public class CourtView extends RelativeLayout
 		}else if (this.action != null){
 			enemyScoreboard++;
 		}
+		
 		//finish the game, if the scoreboard is complete
 		if ((Math.abs(scoreboard - enemyScoreboard) >= 2) &&
 			(scoreboard >= 25 ) || (enemyScoreboard >= 25)){
@@ -168,6 +167,11 @@ public class CourtView extends RelativeLayout
 			actionsStack = new Stack<CourtView.ActionTaken>();
 			//reset the board
 			scoreboard = 0; enemyScoreboard = 0;
+		}else{
+			//Communicate the change of score to the rest of the world
+			if (listener != null){
+				listener.onScoreChanged(action.voleiAction, scoreboard, enemyScoreboard);
+			}
 		}
 	}
 	
@@ -266,12 +270,20 @@ public class CourtView extends RelativeLayout
 	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
 	 *
 	 */
-	public interface CourtActionsListener{
+	 public interface CourtActionsListener{
 		/**
 		 * Event that will be triggered when the set is Over
 		 * @param teamScore The int value of the team score at the end of the set.
 		 * @param foeScore The int value of the enemy team score at the end of the set.
 		 */
 		public void onSetEnded(int teamScore, int foeScore, Stack<ActionTaken> actions);
+		/**
+		 * The event that will communicate the changes on the score based on the action
+		 * that has taken place within the court.
+		 * @param action The VoleiAction object that took place in the court
+		 * @param teamScore The int score of the home team
+		 * @param foeScore The int score of the foe team
+		 */
+		public void onScoreChanged(VoleiAction action, int teamScore, int foeScore);
 	}
 }

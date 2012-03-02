@@ -33,14 +33,17 @@ import org.blanco.solovolei.misc.CourtView.CourtActionsListener;
 import org.blanco.solovolei.misc.VoleiAction;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
+import static org.blanco.solovolei.MainActivity.TAG;
 /**
  * The fragment in charge of displaying the court and handle the options 
  * that are executed using gestures and icons present above the court.
@@ -60,10 +63,19 @@ public class CourtFragment extends Fragment
 	 */
 	Dao<Set, Long> dao = null;
 	/**
-	 * 
+	 * The number of sets that the home team has win
 	 */
 	private int sets = 0;
+	/**
+	 * The number of sets that the foe team has win
+	 */
 	private int foeSets = 0;
+	/**
+	 * The listener that will handle the score changes out of this
+	 * fragment. If this listener is not set the score will
+	 * be displayed using Toast 
+	 */
+	public OnScoreChangedListener listener = null;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -75,11 +87,27 @@ public class CourtFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view = (CourtView) inflater.inflate(R.layout.court, null);
+		View layout = inflater.inflate(R.layout.court, null);
+		view = (CourtView) (layout); //layout.findViewById(R.id.court_court_view);
 		view.setCourtActionsListener(this);
 		return view;
 	}	
 	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		//Try to set the OnScoreChangedListener listener with the attached interface
+		//if no listener has been set yet.
+		if (listener == null && activity instanceof OnScoreChangedListener){
+			//There is no listener set yet and the activity implements it. Set it
+			listener = (OnScoreChangedListener) activity;
+			Log.d(TAG, "CourtFragment - Activity implements score change interface. Attacched");
+		}else if (listener == null && !(activity instanceof OnScoreChangedListener)){
+			Log.d(TAG, "CourtFragment - Activity does implements score change interface."
+					+" Toast will be used");
+		}
+	}
+
 	/**
 	 * Sets the VoleiAction that has been taken place in the
 	 * CourtView of this fragment; 
@@ -113,6 +141,24 @@ public class CourtFragment extends Fragment
 		handleSets(teamScore, foeScore);
 	}
 	
+	@Override
+	public void onScoreChanged(VoleiAction action, int teamScore, int foeScore) {
+		if (listener != null){
+			//Communicate the action to the rest of the world
+			listener.OnScoreChanged(action, teamScore, foeScore);
+		}else{
+			Toast.makeText(getActivity(), teamScore+" - "+foeScore, Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	//end of methods that are needed to implement from the CourtActionsListener
+	//interface
+	/**
+	 * Method that handle the sets win by each team according to the
+	 * final score passed on the parameters.
+	 * @param teamScore The final int value of the score for the home team
+	 * @param foeScore The final int value of the score for the foe team
+	 */
 	private void handleSets(int teamScore, int foeScore) {
 		if (teamScore > foeScore){
 			sets++;
@@ -147,4 +193,26 @@ public class CourtFragment extends Fragment
 		dao.createOrUpdate(s);
 	}
 	
+	/**
+	 * The interface that will handle the changes on the score of the game. This   
+	 * handler will help to communicate the score changes to the rest of the world.
+	 * 
+	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
+	 */
+	public interface OnScoreChangedListener{
+		/**
+		 * The method that will handle the event triggered when the score of the game
+		 * changed.
+		 * @param action The VoleiAction object that triggered the score change
+		 * @param teamScore The int value of the score for the home team.
+		 * @param foeScore The int value of the score for the visit team.
+		 */
+		public void OnScoreChanged(VoleiAction action, int teamScore, int foeScore);
+		/**
+		 * The method that will communicate when one set has ended
+		 * @param teamScore
+		 * @param foeScore
+		 */
+		public void OnSetEnded(int teamScore, int foeScore);
+	}
 }

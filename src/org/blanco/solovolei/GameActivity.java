@@ -26,6 +26,7 @@ package org.blanco.solovolei;
 import static org.blanco.solovolei.MainActivity.TAG;
 
 import org.blanco.solovolei.fragments.game.CourtFragment;
+import org.blanco.solovolei.fragments.game.ScoreFragment;
 import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment;
 import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment.VoleiActionListener;
 import org.blanco.solovolei.misc.VoleiAction;
@@ -36,15 +37,25 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 public class GameActivity extends FragmentActivity 
-	implements VoleiActionListener{
+	implements VoleiActionListener, CourtFragment.OnScoreChangedListener{
 
 	/**
 	 * The String action name used to launch the activity
 	 */
 	public static final String INTENT_ACTION = "org.blanco.solovolei.GAME";
-	
+	/**
+	 * The fragment in charge of displaying and handling the court & actions
+	 */
 	CourtFragment courtFragment = null;
+	/**
+	 * The fragment in charge of displaying and handling the selection of
+	 * VoleiActions
+	 */
 	VoleiActionPickerFragment actionPickFragment = null;
+	/**
+	 * The fragment in charge of displaying the score
+	 */
+	private ScoreFragment scoreFragment = null;
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -61,6 +72,9 @@ public class GameActivity extends FragmentActivity
 			break;
 		case R.id.court_layout_action_pick_fragment:
 			actionPickFragment = (VoleiActionPickerFragment) fragment;
+			break;
+		case R.id.court_layout_score_fragment:
+			scoreFragment = (ScoreFragment)fragment;
 		default:
 			Log.w(TAG, "Attached fragment has not recognized id: "+fragment);
 			break;
@@ -76,5 +90,22 @@ public class GameActivity extends FragmentActivity
 			Log.w(TAG, "VoleiActionPicked but court fragment is not set yet");
 		}
 	}
+
+	@Override
+	public void OnScoreChanged(VoleiAction action, int teamScore, int foeScore) {
+		if (action.isPointToFavor()){
+			scoreFragment.scoreHome();
+		}else{
+			scoreFragment.scoreVisit();
+		}
+	}
+
+	@Override
+	public void OnSetEnded(int teamScore, int foeScore) {
+		// TODO Handle the set ended action.
+		
+	}
+	
+	
 	
 }
