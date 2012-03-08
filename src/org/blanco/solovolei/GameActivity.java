@@ -91,8 +91,9 @@ public class GameActivity extends FragmentActivity
 		}
 	}
 
+	//Implementation of the CourtFragment OnScoreChangedListener
 	@Override
-	public void OnScoreChanged(VoleiAction action, int teamScore, int foeScore) {
+	public void onScoreChanged(VoleiAction action, int teamScore, int foeScore) {
 		if (action.isPointToFavor()){
 			scoreFragment.scoreHome();
 		}else{
@@ -101,11 +102,17 @@ public class GameActivity extends FragmentActivity
 	}
 
 	@Override
-	public void OnSetEnded(int teamScore, int foeScore) {
-		// TODO Handle the set ended action.
-		
+	public void onSetEnded(int teamScore, int foeScore) {
+		//Reset the score
+		scoreFragment.resetScore();
+	}
+
+	@Override
+	public void onGameEnded() {
+		//TODO implement this correctly
+		this.finish();
 	}
 	
-	
+	//End of Implementation of the CourtFragment OnScoreChangedListener
 	
 }

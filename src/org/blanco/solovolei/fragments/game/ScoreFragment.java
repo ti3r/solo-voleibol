@@ -81,6 +81,7 @@ public class ScoreFragment extends Fragment {
 	 */
 	public void resetScore(){
 		home = 0; visit = 0;
+		changeScore();
 	}
 	/**
 	 * Returns the int value of the score for the Home Team

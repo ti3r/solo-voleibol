@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.blanco.solovolei.misc.CourtView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.blanco.solovolei.fragments.game.CourtView xmlns:android="http://schemas.android.com/apk/res/android"
     	android:id="@+id/court_court_view"
     	android:layout_centerInParent="true"
 	    android:layout_width="match_parent"

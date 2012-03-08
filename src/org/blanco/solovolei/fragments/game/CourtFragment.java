@@ -28,8 +28,7 @@ import java.util.Stack;
 
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Set;
-import org.blanco.solovolei.misc.CourtView;
-import org.blanco.solovolei.misc.CourtView.CourtActionsListener;
+import org.blanco.solovolei.fragments.game.CourtView.CourtActionsListener;
 import org.blanco.solovolei.misc.VoleiAction;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
@@ -131,12 +130,10 @@ public class CourtFragment extends Fragment
 	
 	@Override
 	public void onSetEnded(int teamScore, int foeScore, Stack<CourtView.ActionTaken> actions) {
-		Toast.makeText(getActivity(), "Set ended", Toast.LENGTH_LONG).show();
 		try {
 			saveSet(teamScore, foeScore, actions);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "CourtFragment - Error onSetEnded - saveSet()",e);
 		}
 		handleSets(teamScore, foeScore);
 	}
@@ -145,7 +142,7 @@ public class CourtFragment extends Fragment
 	public void onScoreChanged(VoleiAction action, int teamScore, int foeScore) {
 		if (listener != null){
 			//Communicate the action to the rest of the world
-			listener.OnScoreChanged(action, teamScore, foeScore);
+			listener.onScoreChanged(action, teamScore, foeScore);
 		}else{
 			Toast.makeText(getActivity(), teamScore+" - "+foeScore, Toast.LENGTH_LONG).show();
 		}
@@ -160,6 +157,11 @@ public class CourtFragment extends Fragment
 	 * @param foeScore The final int value of the score for the foe team
 	 */
 	private void handleSets(int teamScore, int foeScore) {
+		//Communicate the end of the set to the rest of the world
+		if (listener != null){
+			listener.onSetEnded(teamScore, foeScore);
+		}
+		//Handle the sets count internally.
 		if (teamScore > foeScore){
 			sets++;
 		} else {
@@ -167,9 +169,12 @@ public class CourtFragment extends Fragment
 		}
 		if (sets == 3 || foeSets == 3){
 			//Game Ended Deactivate the view.
-			Toast.makeText(getActivity(), "Game Ended!!!!", Toast.LENGTH_LONG).show();
 			view.setActivated(false);
 			view.invalidate();
+			if (listener != null){
+				Log.d(TAG, "Communucating the end of the game to the rest of the world");
+				listener.onGameEnded();
+			}
 		}
 	}
 
@@ -207,12 +212,16 @@ public class CourtFragment extends Fragment
 		 * @param teamScore The int value of the score for the home team.
 		 * @param foeScore The int value of the score for the visit team.
 		 */
-		public void OnScoreChanged(VoleiAction action, int teamScore, int foeScore);
+		public void onScoreChanged(VoleiAction action, int teamScore, int foeScore);
 		/**
 		 * The method that will communicate when one set has ended
 		 * @param teamScore
 		 * @param foeScore
 		 */
-		public void OnSetEnded(int teamScore, int foeScore);
+		public void onSetEnded(int teamScore, int foeScore);
+		/***
+		 * The method that will communicate when the game is over 
+		 */
+		public void onGameEnded();
 	}
 }

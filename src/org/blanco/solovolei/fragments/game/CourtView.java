@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.blanco.solovolei.misc;
+package org.blanco.solovolei.fragments.game;
 
 import static org.blanco.solovolei.MainActivity.TAG;
 
 import java.util.Stack;
 
 import org.blanco.solovolei.PreferenceActivity;
+import org.blanco.solovolei.misc.VoleiAction;
 
 import android.R;
 import android.content.Context;
@@ -270,7 +271,7 @@ public class CourtView extends RelativeLayout
 	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
 	 *
 	 */
-	 public interface CourtActionsListener{
+	 interface CourtActionsListener{
 		/**
 		 * Event that will be triggered when the set is Over
 		 * @param teamScore The int value of the team score at the end of the set.
