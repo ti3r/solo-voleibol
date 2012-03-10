@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<!-- Home sets and score -->
+<ImageView
+    android:id="@+id/score_layout_home_sets"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:contentDescription="@string/home_sets"
+    android:src="@drawable/zero" />
+    
+<ImageView android:id="@+id/score_layout_home_tens"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/none"
+    android:contentDescription="@string/tens"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@id/score_layout_home_sets"
+    />
+
+<ImageView
+    android:id="@+id/score_layout_home_units"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/none"
+    android:layout_toRightOf="@id/score_layout_home_tens"
+    android:contentDescription="@string/units"
+    android:layout_below="@id/score_layout_home_sets"
+     />
+
+<!-- End of Home sets and score -->
+
+<!-- Foe sets and score -->
+
+<ImageView
+    android:id="@+id/score_layout_foe_sets"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"    
+    android:layout_toRightOf="@id/score_layout_home_sets"
+    android:contentDescription="@string/foe_sets"
+    android:src="@drawable/zero" />
+
+<ImageView
+    android:id="@+id/score_layout_foe_tens"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/none_red"
+    android:layout_below="@id/score_layout_foe_sets"
+    android:layout_toRightOf="@id/score_layout_home_units"
+    android:contentDescription="@string/units"
+    
+     />
+
+<ImageView
+    android:id="@+id/score_layout_foe_units"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/none_red"
+    android:layout_below="@id/score_layout_foe_sets"
+    android:layout_toRightOf="@id/score_layout_foe_tens"
+    android:contentDescription="@string/units"
+    
+     />
+
+<!-- End Foe sets and score -->
+
+</RelativeLayout>

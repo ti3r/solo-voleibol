@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 public class GameActivity extends FragmentActivity 
 	implements VoleiActionListener, CourtFragment.OnScoreChangedListener{
@@ -102,9 +103,24 @@ public class GameActivity extends FragmentActivity
 	}
 
 	@Override
-	public void onSetEnded(int teamScore, int foeScore) {
-		//Reset the score
-		scoreFragment.resetScore();
+	public void onSetEnded(final int teamScore, final int foeScore) {
+		//Set the final score
+		scoreFragment.setHome(teamScore);
+		scoreFragment.setVisit(foeScore);
+		scoreFragment.refreshScoreView();
+		
+		//Broadcast the message to Reset the score and increment the sets
+		scoreFragment.getView().postDelayed(new Runnable(){
+			@Override
+			public void run() {
+				scoreFragment.resetScore();
+				if (teamScore > foeScore)
+					scoreFragment.setHomeSets(scoreFragment.getHomeSets()+1);
+				else
+					scoreFragment.setVisitSets(scoreFragment.getVisitSets()+1);
+			}
+		}, 5000);
+		Toast.makeText(this, "Set Ended", Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -116,3 +132,4 @@ public class GameActivity extends FragmentActivity
 	//End of Implementation of the CourtFragment OnScoreChangedListener
 	
 }
+

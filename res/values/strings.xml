@@ -35,4 +35,8 @@
     <string name="start_game">Start Match</string>
     <string name="show_hide_desc">Show Hide</string>
     <string name="prefs_match">Match Preference</string>
+    <string name="tens">tens</string>
+    <string name="units">units</string>
+    <string name="home_sets">Home Sets</string>
+    <string name="foe_sets">Foe Sets</string>
 </resources>
