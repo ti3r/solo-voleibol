@@ -68,6 +68,7 @@ public class GameActivity extends FragmentActivity
 	@Override
 	public void onAttachFragment(Fragment fragment) {
 		switch (fragment.getId()) {
+		
 		case R.id.court_layout_court_fragment:
 			courtFragment = (CourtFragment) fragment;
 			break;

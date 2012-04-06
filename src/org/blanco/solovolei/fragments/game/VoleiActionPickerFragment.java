@@ -29,6 +29,8 @@ import org.blanco.solovolei.R;
 import org.blanco.solovolei.misc.ExpandAnimation;
 import org.blanco.solovolei.misc.VoleiAction;
 
+import roboguice.inject.InjectView;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,6 +40,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 /**
  * The Fragment in charge of Displaying to the user
@@ -65,6 +68,11 @@ public class VoleiActionPickerFragment extends Fragment
 	 */
 	private Button btnBadBlock;
 	/**
+	 * The button that activated the BAD_SPIKE VoleiAction
+	 */
+	private Button btnBadSpike;
+	
+	/**
 	 * The button at the border of the fragment to hide and
 	 * show the fragment
 	 */
@@ -81,11 +89,19 @@ public class VoleiActionPickerFragment extends Fragment
 	 * handle the show hide functionality
 	 */
 	private int initialHeight = -1;
+	/**
+	 * The RelativeLayout that contains the action buttons 
+	 * This view will be animated in order to display or
+	 * hide the action buttons.
+	 */
+	RelativeLayout lytButtonsContainer = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.volei_action_picker_layout, null);
+		lytButtonsContainer = (RelativeLayout) v.
+				findViewById(R.id.volei_action_picker_lyt_buttons_container);
 		btnSpike = (Button) v.findViewById(R.id.volei_action_picker_btn_spike);
 		btnSpike.setOnClickListener(this);
 		btnBlock = (Button) v.findViewById(R.id.volei_action_picker_btn_block);
@@ -94,7 +110,8 @@ public class VoleiActionPickerFragment extends Fragment
 		btnBadBlock.setOnClickListener(this);
 		btnShowHide = (ImageButton) v.findViewById(R.id.volei_action_picker_btn_show_hide);
 		btnShowHide.setOnClickListener(this);
-		
+		btnBadSpike = (Button) v.findViewById(R.id.volei_action_picker_layout_btn_bad_spike);
+		btnBadSpike.setOnClickListener(this);
 		return v;
 	}
 	
@@ -128,6 +145,8 @@ public class VoleiActionPickerFragment extends Fragment
 				case R.id.volei_action_picker_btn_bad_block:
 					listener.onActionPicked(VoleiAction.BAD_BLOCK);
 					break;
+				case R.id.volei_action_picker_layout_btn_bad_spike:
+					listener.onActionPicked(VoleiAction.BAD_SPIKE);
 				case R.id.volei_action_picker_btn_show_hide:
 					//execute show and hide logic
 					showHide();
@@ -148,13 +167,14 @@ public class VoleiActionPickerFragment extends Fragment
 			initialHeight = getView().getHeight();
 			Log.d(TAG, "Initial height of the view: "+initialHeight);
 		}
-		ExpandAnimation anim = new ExpandAnimation(getView(), getView().getHeight(), 
-				(initialHeight != getView().getHeight())? initialHeight : 25);
-		getView().setAnimation(anim);
-		getView().startAnimation(anim);
+		ExpandAnimation anim = new ExpandAnimation(lytButtonsContainer, 
+				lytButtonsContainer.getHeight(), 
+				(initialHeight != lytButtonsContainer.getHeight())? initialHeight : 2);
+		lytButtonsContainer.setAnimation(anim);
+		lytButtonsContainer.startAnimation(anim);
 		//Change the icon of the button
 		btnShowHide.setImageDrawable(getResources().getDrawable(
-				(initialHeight != getView().getHeight())?
+				(initialHeight != lytButtonsContainer.getHeight())?
 				android.R.drawable.arrow_up_float:
 				android.R.drawable.arrow_down_float));
 		

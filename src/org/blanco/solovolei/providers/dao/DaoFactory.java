@@ -50,7 +50,8 @@ public class DaoFactory {
 	
 	
 	private static void initFactory(Context context){
-		helper = new SoloVoleiSQLiteOpenHelper(context, null, 1);
+		//helper = //new SoloVoleiSQLiteOpenHelper(context, null, 1);
+		helper = new SoloVoleiSQLiteOpenHelper(context, null, 2);
 	}
 	
 	public static <T> Dao<?, ?> getDao(Context context, Class<T> clas){

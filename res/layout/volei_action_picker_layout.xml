@@ -2,7 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
-
+<RelativeLayout android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:gravity="center_horizontal"
+    android:layout_centerHorizontal="true"
+    android:background="#123456"
+    android:id="@+id/volei_action_picker_lyt_buttons_container">
+    
 <Button
     android:id="@+id/volei_action_picker_btn_spike"
     android:layout_width="wrap_content"
@@ -27,6 +33,16 @@
     android:layout_alignParentTop="true"
     android:layout_toRightOf="@+id/volei_action_picker_btn_block"
     android:text="@string/bad_block" />
+
+<Button
+    android:id="@+id/volei_action_picker_layout_btn_bad_spike"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_toRightOf="@+id/volei_action_picker_btn_bad_block"
+    android:text="@string/bad_spike" />
+
+</RelativeLayout>
 
 <ImageButton
     android:id="@+id/volei_action_picker_btn_show_hide"

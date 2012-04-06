@@ -33,17 +33,49 @@ package org.blanco.solovolei.misc;
  *
  */
 public enum VoleiAction {
-	
+	/**
+	 * A player spikes the ball and it is a good point
+	 */
 	SPIKE (true),
+	/**
+	 * A player blocks the enemy's spike and it is a 
+	 * good point
+	 */
 	BLOCK (true), 
-	BAD_BLOCK (false);
+	/**
+	 * A player blocks the enemy's spike but it goes
+	 * out, or the player touches the net so it is a
+	 * bad point
+	 */
+	BAD_BLOCK (false), 
+	/**
+	 * A player tries to spike the ball but it goes 
+	 * out or it does not crosses the net so it is a
+	 * bad point.
+	 */
+	BAD_SPIKE(false);
 	
+	/**
+	 * The property to know if this action produces
+	 * a point in favor or con
+	 */
 	private boolean pointToFavor = true;
 	
+	/**
+	 * Constructor to build a new VoleiAction 
+	 * Enumeration Item
+	 * @param favor The boolean argument to know if
+	 * it is point on favor or not.
+	 */
 	VoleiAction(boolean favor){
 		this.pointToFavor = favor;
 	}
-	
+	/**
+	 * Retrieves the pointToFavor property of the 
+	 * Enum Item
+	 * @return The boolean value of the pointToFavor
+	 * property of the Enum Item.
+	 */
 	public boolean isPointToFavor(){
 		return this.pointToFavor;
 	}

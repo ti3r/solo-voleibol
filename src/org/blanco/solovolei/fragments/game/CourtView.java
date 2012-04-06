@@ -86,6 +86,8 @@ public class CourtView extends RelativeLayout
 		paint.setColor((action.isPointToFavor())? goodPointColor : badPointColor);
 		//Set the Stroke Width
 		paint.setStrokeWidth(3.5f);
+		//set the background of the court
+		this.setBackgroundResource(org.blanco.solovolei.R.drawable.court);
 	}
 	
 	/**
