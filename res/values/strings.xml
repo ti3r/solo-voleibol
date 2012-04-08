@@ -40,4 +40,5 @@
     <string name="home_sets">Home Sets</string>
     <string name="foe_sets">Foe Sets</string>
     <string name="bad_spike">Bad Spike</string>
+    <string name="undo">Undo</string>
 </resources>

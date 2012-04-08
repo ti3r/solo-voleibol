@@ -68,8 +68,11 @@ public class ScoreFragment extends Fragment {
 		return r;
 	}
 	
-	
-	private void setHomeScore(){
+	/**
+	 * Invalidate the View Portion of the Home Score in order
+	 * to reflect a new value in the score.
+	 */
+	private void invalidateHomeScoreView(){
 		
 		if (home >= 10){
 			setViewNumber(htens, (home / 10));
@@ -78,8 +81,11 @@ public class ScoreFragment extends Fragment {
 		setViewNumber(hunits, (home % 10));
 		hunits.invalidate();
 	}
-	
-	private void setFoeScore(){
+	/**
+	 * Invalidate the View Portion of the Visit Score in order
+	 * to reflect a new value in the score.
+	 */
+	private void invalidateVisitScoreView(){
 		if (visit >= 10){
 			setViewNumber(vtens, (visit / 10));
 			vtens.invalidate();
@@ -131,8 +137,8 @@ public class ScoreFragment extends Fragment {
 	 * the view
 	 */
 	public void refreshScoreView(){
-		setHomeScore();
-		setFoeScore();
+		invalidateHomeScoreView();
+		invalidateVisitScoreView();
 	}
 	
 	/**
@@ -140,14 +146,14 @@ public class ScoreFragment extends Fragment {
 	 */
 	public void scoreHome(){
 		home++;
-		setHomeScore();
+		invalidateHomeScoreView();
 	}
 	/**
 	 * Increments the value of the visit team by 1
 	 */
 	public void scoreVisit(){
 		visit++;
-		setFoeScore();
+		invalidateVisitScoreView();
 	}
 	/**
 	 * Sets the values of the score to 0 - 0
@@ -172,6 +178,7 @@ public class ScoreFragment extends Fragment {
 	 */
 	public void setHome(int home) {
 		this.home = home;
+		invalidateHomeScoreView();
 	}
 	/**
 	 * Returns the int value of the score for the Foe Team
@@ -186,7 +193,7 @@ public class ScoreFragment extends Fragment {
 	 */
 	public void setVisit(int visit) {
 		this.visit = visit;
-	
+		invalidateVisitScoreView();
 	}
 
 	/**

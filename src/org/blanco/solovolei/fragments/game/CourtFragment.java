@@ -118,13 +118,23 @@ public class CourtFragment extends Fragment
 		view.setAction(action);
 	}
 	/**
-	 * This method will invalidate the current action 
-	 * in the CourtView in order to start over.
+	 * This method will trigger the invalidation of 
+	 * the current action in the CourtView in order
+	 * to start over.
 	 */
 	public void resetAction(){
 		view.cancelCurrentAction();
 	}
-
+	/**
+	 * This method will trigger the undo action in the
+	 * current court view. It will invalidate the current
+	 * action first.
+	 */
+	public void undoPreviousAction(){
+		resetAction();
+		view.revertLastAction();
+	}
+	
 	//methods that are needed to implement from the CourtActionsListener
 	//interface
 	

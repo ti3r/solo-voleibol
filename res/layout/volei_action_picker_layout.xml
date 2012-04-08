@@ -42,6 +42,13 @@
     android:layout_toRightOf="@+id/volei_action_picker_btn_bad_block"
     android:text="@string/bad_spike" />
 
+<ImageButton android:id="@+id/volei_action_picker_btn_undo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/volei_action_picker_layout_btn_bad_spike"
+    android:src="@android:drawable/ic_menu_revert"
+    android:contentDescription="@string/undo" />
+
 </RelativeLayout>
 
 <ImageButton

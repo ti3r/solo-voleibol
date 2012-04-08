@@ -29,8 +29,6 @@ import org.blanco.solovolei.R;
 import org.blanco.solovolei.misc.ExpandAnimation;
 import org.blanco.solovolei.misc.VoleiAction;
 
-import roboguice.inject.InjectView;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -94,27 +92,38 @@ public class VoleiActionPickerFragment extends Fragment
 	 * This view will be animated in order to display or
 	 * hide the action buttons.
 	 */
-	RelativeLayout lytButtonsContainer = null;
+	private RelativeLayout lytButtonsContainer = null;
+	/**
+	 * The button that will hold the undo Action
+	 */
+	private ImageButton btnUndo = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.volei_action_picker_layout, null);
-		lytButtonsContainer = (RelativeLayout) v.
-				findViewById(R.id.volei_action_picker_lyt_buttons_container);
-		btnSpike = (Button) v.findViewById(R.id.volei_action_picker_btn_spike);
-		btnSpike.setOnClickListener(this);
-		btnBlock = (Button) v.findViewById(R.id.volei_action_picker_btn_block);
-		btnBlock.setOnClickListener(this);
-		btnBadBlock = (Button) v.findViewById(R.id.volei_action_picker_btn_bad_block);
-		btnBadBlock.setOnClickListener(this);
-		btnShowHide = (ImageButton) v.findViewById(R.id.volei_action_picker_btn_show_hide);
-		btnShowHide.setOnClickListener(this);
-		btnBadSpike = (Button) v.findViewById(R.id.volei_action_picker_layout_btn_bad_spike);
-		btnBadSpike.setOnClickListener(this);
 		return v;
 	}
-	
+	//After the view is created set the references to the fragments
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		lytButtonsContainer = (RelativeLayout) view.
+				findViewById(R.id.volei_action_picker_lyt_buttons_container);
+		btnSpike = (Button) view.findViewById(R.id.volei_action_picker_btn_spike);
+		btnSpike.setOnClickListener(this);
+		btnBlock = (Button) view.findViewById(R.id.volei_action_picker_btn_block);
+		btnBlock.setOnClickListener(this);
+		btnBadBlock = (Button) view.findViewById(R.id.volei_action_picker_btn_bad_block);
+		btnBadBlock.setOnClickListener(this);
+		btnShowHide = (ImageButton) view.findViewById(R.id.volei_action_picker_btn_show_hide);
+		btnShowHide.setOnClickListener(this);
+		btnBadSpike = (Button) view.findViewById(R.id.volei_action_picker_layout_btn_bad_spike);
+		btnBadSpike.setOnClickListener(this);
+		btnUndo = (ImageButton) view.findViewById(R.id.volei_action_picker_btn_undo);
+		btnUndo.setOnClickListener(this);
+	}
+
+
 
 
 
@@ -137,23 +146,53 @@ public class VoleiActionPickerFragment extends Fragment
 		if (listener != null){
 			switch(v.getId()){
 				case  R.id.volei_action_picker_btn_spike:
-					listener.onActionPicked(VoleiAction.SPIKE);
+					actionPicked(VoleiAction.SPIKE);
 					break;
 				case R.id.volei_action_picker_btn_block:
-					listener.onActionPicked(VoleiAction.BLOCK);
+					actionPicked(VoleiAction.BLOCK);
 					break;
 				case R.id.volei_action_picker_btn_bad_block:
-					listener.onActionPicked(VoleiAction.BAD_BLOCK);
+					actionPicked(VoleiAction.BAD_BLOCK);
 					break;
 				case R.id.volei_action_picker_layout_btn_bad_spike:
-					listener.onActionPicked(VoleiAction.BAD_SPIKE);
+					actionPicked(VoleiAction.BAD_SPIKE);
 				case R.id.volei_action_picker_btn_show_hide:
 					//execute show and hide logic
 					showHide();
 					break;
+				case R.id.volei_action_picker_btn_undo:
+					undo();
+					break;
 			}
 		}else{
 			Log.w(TAG, "VoleiAction selected but not listener established to handle it");
+		}
+	}
+	/**
+	 * The method that will be executed when one action has been selected
+	 * (One of the button options is clicked) and the action has been 
+	 * identified in the switch clause of the OnClickListener of the buttons.
+	 * @param action The VoleiAction that has been identified.
+	 */
+	private void actionPicked(VoleiAction action){
+		if (listener == null){
+			Log.w(TAG, "VoleiAction has been picked and identified but no listener " +
+					"has been set to the fragment to handle the event");
+		}else{
+			listener.onActionPicked(action);
+		}
+	}
+	/**
+	 * The method that will be executed when the undo action has been selected
+	 * (The undo button is clicked) and the action has been identified in the 
+	 * switch clause of the OnClickListener of the buttons.
+	 */
+	private void undo(){
+		if (listener == null){
+			Log.w(TAG, "Undo action has been selected in the fragment but no listener " +
+					"has been set to handle the event");
+		}else{
+			listener.onUndoPreviousAction();
 		}
 	}
 	
@@ -194,5 +233,12 @@ public class VoleiActionPickerFragment extends Fragment
 		 * @param action The VoleiAction that has been selected.
 		 */
 		public void onActionPicked(VoleiAction action);
+		
+		/**
+		 * Method to be executed when the undo option is picked
+		 * from the displayed options.
+		 */
+		public void onUndoPreviousAction();
+		
 	}
 }

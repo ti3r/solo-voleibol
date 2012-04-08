@@ -93,13 +93,23 @@ public class GameActivity extends FragmentActivity
 		}
 	}
 
+	@Override
+	public void onUndoPreviousAction(){
+		if (courtFragment != null){
+			courtFragment.undoPreviousAction();
+		}else{
+			Log.w(TAG, "Undo action was selected but no court fragment has " +
+					"been set in the game to handle the event");
+		}
+	}
+	
 	//Implementation of the CourtFragment OnScoreChangedListener
 	@Override
 	public void onScoreChanged(VoleiAction action, int teamScore, int foeScore) {
 		if (action.isPointToFavor()){
-			scoreFragment.scoreHome();
+			scoreFragment.setHome(teamScore);
 		}else{
-			scoreFragment.scoreVisit();
+			scoreFragment.setVisit(foeScore);
 		}
 	}
 

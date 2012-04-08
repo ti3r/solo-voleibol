@@ -28,6 +28,7 @@ import static org.blanco.solovolei.MainActivity.TAG;
 import java.util.Stack;
 
 import org.blanco.solovolei.PreferenceActivity;
+import org.blanco.solovolei.fragments.game.CourtFragment.OnScoreChangedListener;
 import org.blanco.solovolei.misc.VoleiAction;
 
 import android.R;
@@ -225,17 +226,25 @@ public class CourtView extends RelativeLayout
 	 * pops the last action from the stack of actions.
 	 */
 	public void revertLastAction(){
-		ActionTaken action = actionsStack.pop();
-		if (action.voleiAction.isPointToFavor()){
-			scoreboard --;
-		}else {
-			enemyScoreboard --;
+		if (actionsStack.isEmpty()){
+			Log.w(TAG, "revertAction has been selected but ActionsStack is empty." +
+					" Event will be ignored");
 		}
-		//invalidate the part of the action if it's still present
-		invalidate(new Rect((int)(action.point.x-paint.getStrokeWidth()),
-				(int)(action.point.y-paint.getStrokeWidth()),
-				(int)(action.point.x+paint.getStrokeWidth()),
-				(int)(action.point.y+paint.getStrokeWidth())));
+		else{
+			ActionTaken action = actionsStack.pop();
+			if (action.voleiAction.isPointToFavor()){
+				scoreboard --;
+			}else {
+				enemyScoreboard --;
+			}
+			//invalidate the part of the action if it's still present
+			invalidate(new Rect((int)(action.point.x-paint.getStrokeWidth()),
+					(int)(action.point.y-paint.getStrokeWidth()),
+					(int)(action.point.x+paint.getStrokeWidth()),
+					(int)(action.point.y+paint.getStrokeWidth())));
+			//Propagate the score change to the world
+			listener.onScoreChanged(action.voleiAction, scoreboard, enemyScoreboard);
+		}
 	}
 	
 	/**

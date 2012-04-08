@@ -7,6 +7,5 @@
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="/home/alex/workspace/solo_voleibol/ormlite-android-4.30.jar"/>
 	<classpathentry kind="lib" path="/home/alex/workspace/solo_voleibol/ormlite-core-4.30.jar"/>
-	<classpathentry kind="lib" path="roboguice-1.1.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
