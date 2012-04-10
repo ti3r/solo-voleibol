@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="court_view_index_tag">The unique resource that will be used to add the id of the current display when the court view is in review mode. This actual value will never be used.</string>
+    <string name="court_view_actions_tag">The unique resource that will be used to add the actions to be displayed when the court view is in review mode. This actual value will never be used.</string>
+    
+</resources>

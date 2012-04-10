@@ -41,4 +41,6 @@
     <string name="foe_sets">Foe Sets</string>
     <string name="bad_spike">Bad Spike</string>
     <string name="undo">Undo</string>
+    <string name="solo_volei">Solo Voleibol</string>
+    <string name="set_review_actions_ques">Do you want to review the actions of this set?</string>
 </resources>

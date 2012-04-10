@@ -74,7 +74,9 @@ public class CourtFragment extends Fragment
 	 * fragment. If this listener is not set the score will
 	 * be displayed using Toast 
 	 */
-	public OnScoreChangedListener listener = null;
+	private OnScoreChangedListener listener = null;
+	
+	private Stack<CourtView.ActionTaken> actionsStack = null; 
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -133,6 +135,15 @@ public class CourtFragment extends Fragment
 	public void undoPreviousAction(){
 		resetAction();
 		view.revertLastAction();
+	}
+	/**
+	 * This method will redraw all the actions that have
+	 * happened in the court in order to review them.
+	 * @param actions The Stack of ActionTaken object to be redrawn in the court view
+	 */
+	public void reviewActions(){
+		view.setActivated(false);
+		view.reviewActions(actionsStack);
 	}
 	
 	//methods that are needed to implement from the CourtActionsListener
@@ -206,6 +217,9 @@ public class CourtFragment extends Fragment
 		s.setEnemyScore(foeScore);
 		s.setScore(teamScore);
 		dao.createOrUpdate(s);
+		
+		//maintain reference to the actions happened in the set just for review purposes;
+		actionsStack = actions;
 	}
 	
 	/**

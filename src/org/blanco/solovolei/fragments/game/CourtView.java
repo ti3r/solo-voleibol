@@ -28,7 +28,6 @@ import static org.blanco.solovolei.MainActivity.TAG;
 import java.util.Stack;
 
 import org.blanco.solovolei.PreferenceActivity;
-import org.blanco.solovolei.fragments.game.CourtFragment.OnScoreChangedListener;
 import org.blanco.solovolei.misc.VoleiAction;
 
 import android.R;
@@ -68,6 +67,8 @@ public class CourtView extends RelativeLayout
 	
 	private int goodPointColor = Color.GREEN;
 	private int badPointColor = Color.RED;
+	
+	private boolean reviewMode = false;
 	
 	public CourtView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -122,10 +123,28 @@ public class CourtView extends RelativeLayout
 	 */
 	@Override
 	protected void onDraw(Canvas canvas) {
+		//TODO sanitize this
 		super.onDraw(canvas);
-		if (!activated){
-			setBackgroundColor(Color.BLACK);
-		}else{
+		if (reviewMode){
+			Integer i = (Integer) getTag(org.blanco.solovolei.R.string.court_view_index_tag);
+			Stack<ActionTaken> actions = (Stack<ActionTaken>) getTag(org.blanco.solovolei.R.string.court_view_actions_tag);
+			if (i == null || actions == null)
+				throw new IllegalStateException("Unable to review actions. Index or Actions are null");
+			for (int j= 0 ; j < i-1; j++){
+				ActionTaken action = actions.get(i);
+				paint.setColor(action.voleiAction.isPointToFavor() ? Color.GREEN : Color.RED);
+				canvas.drawLine(action.point.x,action.point.y,action.point2.x,action.point2.y, paint);
+			}
+			//Replace the current index in the view with the new value
+			setTag(org.blanco.solovolei.R.string.court_view_index_tag,++i);
+			postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					invalidate();
+				}
+			}, 200);
+		}
+		else{
 		//Draw the points 
 		if (points[0] != null && points[1] != null){
 			//Draw a line
@@ -186,6 +205,16 @@ public class CourtView extends RelativeLayout
 	 */
 	public CourtActionsListener getCourtActionsListener() {
 		return listener;
+	}
+	
+	public void reviewActions(Stack<CourtView.ActionTaken> actions){
+		reviewMode = true;
+		//set the current actions stack to the passed actions
+		//Start the tag of the object in 0
+		//So the drawing starts from the beginning (0) 
+		setTag(org.blanco.solovolei.R.string.court_view_index_tag,0);
+		setTag(org.blanco.solovolei.R.string.court_view_actions_tag,actions);
+		invalidate();
 	}
 	
 	/**
@@ -249,11 +278,13 @@ public class CourtView extends RelativeLayout
 	
 	/**
 	 * Sets the activated property of the view in order to know if
-	 * user can iteract with the view.
+	 * user can interact with the view.
 	 */
 	public void setActivated(boolean activated){
 		this.activated = activated;
 	}
+	
+	
 	
 	/***
 	 * Class that represents one action in the volleyball court, this
