@@ -2,9 +2,11 @@
 <resources>
     <string-array name="language_titles">
         <item >English (United States)</item>
+        <item >Spanish (Spain)</item>
     </string-array>
     <string-array name="language_codes">
         <item >EN_US</item>
+        <item >ES_SP</item>
     </string-array>
     
 </resources>

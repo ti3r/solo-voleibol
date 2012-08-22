@@ -43,7 +43,10 @@
         
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_app_language_category_title">
-        <ListPreference android:dialogIcon="@drawable/ic_launcher" android:positiveButtonText="Accept" android:entryValues="@array/language_codes" android:negativeButtonText="Cancel" android:dialogTitle="Application Language" android:entries="@array/language_titles" android:dialogMessage="Select A Language" android:dialogLayout="@layout/teams_list_item" android:title="@string/pref_language_title" android:key="pref_app_language"/>
+        <ListPreference android:dialogIcon="@drawable/ic_launcher" android:positiveButtonText="@string/accept" android:entryValues="@array/language_codes"
+            android:negativeButtonText="@string/cancel" android:dialogTitle="@string/pref_language_dlg_title" android:entries="@array/language_titles" android:dialogMessage="@string/pref_language_dlg_msg" 
+            android:dialogLayout="@android:layout/select_dialog_singlechoice" android:title="@string/pref_language_title" android:key="pref_app_language"
+            />
     </PreferenceCategory>
     
 

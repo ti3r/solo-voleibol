@@ -208,6 +208,10 @@ public class TeamsEditFragment extends Fragment
         return image;
 	}
 	
+	/**
+	 * On activity result and request code was pick photo, and result
+	 * is ok. Create the team logo.
+	 */
 	@Override
 	public void onActivityResult(int requestCode, 
 			int resultCode, Intent data) {

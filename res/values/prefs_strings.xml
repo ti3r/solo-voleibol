@@ -8,12 +8,13 @@
         <item >3</item>
         <item >5</item>
     </string-array>
-        <string name="pref_sets_by_match_header">Number of Sets per Match</string>
-        <string name="preference">Settings</string>
-        <string name="pref_volei_actions_preference">Court Action Colors</string>
-        <string name="prefs_favor_action_color">Good Actions Color</string>
-        <string name="prefs_pick_a_color_msg">Pick a Color</string>
-        <string name="prefs_volei_action_color_good">Good Actions Color</string>
-        <string name="prefs_con_action_color">Bad Actions Color</string>
-    
+    <string name="pref_sets_by_match_header">Number of Sets per Match</string>
+    <string name="preference">Settings</string>
+    <string name="pref_volei_actions_preference">Court Action Colors</string>
+    <string name="prefs_favor_action_color">Good Actions Color</string>
+    <string name="prefs_pick_a_color_msg">Pick a Color</string>
+    <string name="prefs_volei_action_color_good">Good Actions Color</string>
+    <string name="prefs_con_action_color">Bad Actions Color</string>
+	<string name="pref_language_dlg_title">Application\'s Language</string>
+	<string name="pref_language_dlg_msg">Select a Language</string>
 </resources>

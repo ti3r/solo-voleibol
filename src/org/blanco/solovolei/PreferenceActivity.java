@@ -24,7 +24,13 @@
 
 package org.blanco.solovolei;
 
+import java.util.Locale;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import static org.blanco.solovolei.MainActivity.TAG;
 /**
  * The activity in charge of handling the preferences of the application
  * It load the preferences from the settings.xml XML file and displays 
@@ -35,7 +41,8 @@ import android.os.Bundle;
  *
  */
 public class PreferenceActivity 
-	extends android.preference.PreferenceActivity {
+	extends android.preference.PreferenceActivity
+	implements SharedPreferences.OnSharedPreferenceChangeListener{
 
 	/**
 	 * The key used to store the preference of the color for
@@ -56,11 +63,59 @@ public class PreferenceActivity
 	 */
 	public static final String PREF_SETS_BY_MATCH = 
 			"pref_sets_by_match";
+	/**
+	 * The key used to store the preference for the application's 
+	 * language.
+	 */
+	public static final String PREF_APP_LANGUAGE = 
+			"pref_app_language";
+	
+	/**
+	 * The shared preferences object used to store and retrieve 
+	 * the preferences of the application.
+	 */
+	private SharedPreferences prefs = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preference);
+		
 	}
+
+	@Override
+	protected void onStart() {
+		Object o = getLastNonConfigurationInstance();
+		if (o != null && o instanceof SharedPreferences){
+			prefs = (SharedPreferences) o;
+		}else{
+			prefs = PreferenceManager.getDefaultSharedPreferences(this); 
+		}
+		prefs.registerOnSharedPreferenceChangeListener(this);
+		super.onStart();
+	}
+
+	@Override
+	public Object getLastNonConfigurationInstance() {
+		//Save the shared preference object if created
+		return prefs;
+	}
+
+	/* Listener to change if language has been change and react imediately */
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		if (PREF_APP_LANGUAGE.equalsIgnoreCase(key)){
+			//check the new language setting
+			String sett = prefs.getString(key, "en_US");
+			if (!Locale.getDefault().toString().contains(sett)){
+				Log.d(TAG, "Chaning language to: "+sett);
+				String lang = sett.split("_")[0];
+				Locale.setDefault(new Locale(lang));
+			}
+		}
+	}
+	
+	
 	
 }
