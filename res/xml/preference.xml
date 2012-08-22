@@ -42,6 +42,9 @@
             android:dialogIcon="@drawable/ic_launcher"/>
         
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_app_language_category_title">
+        <ListPreference android:dialogIcon="@drawable/ic_launcher" android:positiveButtonText="Accept" android:entryValues="@array/language_codes" android:negativeButtonText="Cancel" android:dialogTitle="Application Language" android:entries="@array/language_titles" android:dialogMessage="Select A Language" android:dialogLayout="@layout/teams_list_item" android:title="@string/pref_language_title" android:key="pref_app_language"/>
+    </PreferenceCategory>
     
 
 </PreferenceScreen>

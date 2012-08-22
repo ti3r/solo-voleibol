@@ -31,14 +31,10 @@ import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment;
 import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment.VoleiActionListener;
 import org.blanco.solovolei.misc.VoleiAction;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 public class GameActivity extends FragmentActivity 
 	implements VoleiActionListener, CourtFragment.OnScoreChangedListener{
