@@ -5,8 +5,8 @@
         <item >3/5</item>
     </string-array>
     <string-array name="prefs_sets_by_match_values">
+        <item >2</item>
         <item >3</item>
-        <item >5</item>
     </string-array>
         <string name="pref_sets_by_match_header">Number of Sets per Match</string>
         <string name="preference">Settings</string>

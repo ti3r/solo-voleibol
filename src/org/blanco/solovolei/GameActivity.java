@@ -29,12 +29,14 @@ import org.blanco.solovolei.fragments.game.CourtFragment;
 import org.blanco.solovolei.fragments.game.ScoreFragment;
 import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment;
 import org.blanco.solovolei.fragments.game.VoleiActionPickerFragment.VoleiActionListener;
+import org.blanco.solovolei.misc.DialogUtils;
 import org.blanco.solovolei.misc.VoleiAction;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -67,6 +69,9 @@ public class GameActivity extends FragmentActivity
 		setContentView(R.layout.game_layout);
 		
 	}
+	
+
+
 
 	@Override
 	public void onAttachFragment(Fragment fragment) {
@@ -85,6 +90,7 @@ public class GameActivity extends FragmentActivity
 			break;
 		}
 	}
+	
 
 	@Override
 	public void onActionPicked(VoleiAction action) {
@@ -107,28 +113,20 @@ public class GameActivity extends FragmentActivity
 	}
 	
 	private void askForReview(){
-//		AlertDialog dialog = new AlertDialog.Builder(this).create();
-//		dialog.setTitle(R.string.solo_volei);
-//		dialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.accept),
-//				new DialogInterface.OnClickListener() {
-//					
-//					@Override
-//					public void onClick(DialogInterface dialog, int which) {
-//						// TODO Auto-generated method stub
-//						
-//					}
-//				});
-//		dialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel),
-//				new DialogInterface.OnClickListener() {
-//					
-//					@Override
-//					public void onClick(DialogInterface dialog, int which) {
-//						dialog.dismiss();
-//					}
-//				});
-//		dialog.setMessage(getString(R.string.set_review_actions_ques));
-//		dialog.show();
-		courtFragment.reviewActions();
+		Dialog  dialog = DialogUtils.createQueryDialog(this, getString(R.string.set_review_actions_ques), 
+				new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						courtFragment.reviewActions();
+					}
+				}, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						//Do Nothing
+						dialog.dismiss();
+					}
+				});
+		dialog.show();
 	}
 	
 	//Implementation of the CourtFragment OnScoreChangedListener
@@ -165,9 +163,24 @@ public class GameActivity extends FragmentActivity
 	}
 
 	@Override
-	public void onGameEnded() {
-		//TODO implement this correctly
+	public void onGameEnded(int teamSets, int foeSets) {
 		this.finish();
+//		String text = null;
+//		if (teamSets > foeSets){
+//			text = String.format("Congrats you won %i to %i", teamSets,foeSets);
+//		}else{
+//			text = String.format("To bad. You lose %i to %i", teamSets,foeSets);
+//		}
+//		Toast.makeText(getBaseContext(), text, Toast.LENGTH_LONG).show();
+//		
+//		Handler handler = new Handler();
+//		handler.postDelayed(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				GameActivity.this.finish();
+//			}
+//		}, 1000);
 	}
 	
 	//End of Implementation of the CourtFragment OnScoreChangedListener
