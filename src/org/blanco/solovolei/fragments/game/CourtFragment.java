@@ -23,9 +23,12 @@
  */
 package org.blanco.solovolei.fragments.game;
 
+import static org.blanco.solovolei.MainActivity.TAG;
+
 import java.sql.SQLException;
 import java.util.Stack;
 
+import org.blanco.solovolei.PreferenceActivity;
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Set;
 import org.blanco.solovolei.fragments.game.CourtView.CourtActionsListener;
@@ -34,6 +37,7 @@ import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +46,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
-import static org.blanco.solovolei.MainActivity.TAG;
 /**
  * The fragment in charge of displaying the court and handle the options 
  * that are executed using gestures and icons present above the court.
@@ -50,8 +53,11 @@ import static org.blanco.solovolei.MainActivity.TAG;
  * @author Alexandro Blanco Santana
  *
  */
-public class CourtFragment extends Fragment 
-	implements CourtActionsListener{
+public class CourtFragment extends Fragment implements CourtActionsListener{
+	/**
+	 * The key name to store the number of sets per game for this fragment
+	 */
+	private static final String NUMBER_OF_SETS_PER_GAME_BUNDLE_KEY = "sett_sets_per_game_key";
 	/**
 	 * The CourtView that will be inflated within the fragment in order
 	 * to let the user register the actions that occurred in the game
@@ -78,11 +84,20 @@ public class CourtFragment extends Fragment
 	
 	private Stack<CourtView.ActionTaken> actionsStack = null; 
 	
+	private int numberofSetsPerGame = -1;//Default value
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dao = (Dao<Set, Long>) DaoFactory.getDao(getActivity(), Set.class);
+		//Try to load the numbers of sets per fame from the bundle
+		if (savedInstanceState != null &&
+				savedInstanceState.containsKey(NUMBER_OF_SETS_PER_GAME_BUNDLE_KEY)){
+			numberofSetsPerGame = savedInstanceState.getInt(NUMBER_OF_SETS_PER_GAME_BUNDLE_KEY);
+		}
+		//Retain this fragment on manager activity
+		setRetainInstance(true);
 	}
 
 	@Override
@@ -107,6 +122,19 @@ public class CourtFragment extends Fragment
 			Log.d(TAG, "CourtFragment - Activity does implements score change interface."
 					+" Toast will be used");
 		}
+		//Retrieve the number of sets per game if not set onCreate from the bundle
+		if(numberofSetsPerGame == -1){
+			//load from preference manager
+			numberofSetsPerGame = PreferenceManager.getDefaultSharedPreferences(activity)
+					.getInt(PreferenceActivity.PREF_SETS_BY_MATCH, 2);
+		}
+	}
+
+	
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
 	}
 
 	/**
@@ -188,13 +216,13 @@ public class CourtFragment extends Fragment
 		} else {
 			foeSets ++;
 		}
-		if (sets == 3 || foeSets == 3){
+		if (sets == numberofSetsPerGame || foeSets == numberofSetsPerGame){
 			//Game Ended Deactivate the view.
 			view.setActivated(false);
 			view.invalidate();
 			if (listener != null){
 				Log.d(TAG, "Communucating the end of the game to the rest of the world");
-				listener.onGameEnded();
+				listener.onGameEnded(sets,foeSets);
 			}
 		}
 	}
@@ -246,6 +274,6 @@ public class CourtFragment extends Fragment
 		/***
 		 * The method that will communicate when the game is over 
 		 */
-		public void onGameEnded();
+		public void onGameEnded(int teamSets, int foeSets);
 	}
 }
