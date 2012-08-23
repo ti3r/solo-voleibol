@@ -30,7 +30,6 @@ import java.util.Stack;
 import org.blanco.solovolei.PreferenceActivity;
 import org.blanco.solovolei.misc.VoleiAction;
 
-import android.R;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -72,7 +71,7 @@ public class CourtView extends RelativeLayout
 	
 	public CourtView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		setBackgroundColor(R.color.white);
+		setBackgroundColor(Color.WHITE);
 		setOnTouchListener(this);
 		//The default action is spike. Volei standards says you
 		//should start receiving the ball and make a spike.
@@ -130,8 +129,8 @@ public class CourtView extends RelativeLayout
 			Stack<ActionTaken> actions = (Stack<ActionTaken>) getTag(org.blanco.solovolei.R.string.court_view_actions_tag);
 			if (i == null || actions == null)
 				throw new IllegalStateException("Unable to review actions. Index or Actions are null");
-			for (int j= 0 ; j < i-1; j++){
-				ActionTaken action = actions.get(i);
+			for (int j= 0 ; j <= i-1; j++){
+				ActionTaken action = actions.get(j);
 				paint.setColor(action.voleiAction.isPointToFavor() ? Color.GREEN : Color.RED);
 				canvas.drawLine(action.point.x,action.point.y,action.point2.x,action.point2.y, paint);
 			}
