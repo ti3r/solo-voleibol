@@ -41,7 +41,7 @@ import com.j256.ormlite.dao.DaoManager;
  * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
  *
  */
-public class DaoFactory {
+public class DaoFactory{
 	
 	/**
 	 * The single SQLiteOpenHelper class used in the application 

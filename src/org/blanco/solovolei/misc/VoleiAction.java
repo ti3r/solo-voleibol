@@ -53,8 +53,13 @@ public enum VoleiAction {
 	 * out or it does not crosses the net so it is a
 	 * bad point.
 	 */
-	BAD_SPIKE(false);
-	
+	BAD_SPIKE(false),
+	/**
+	 * A player touches the ball to an empty spot 
+	 * inside the court awarding his/her team a good
+	 * point.
+	 */
+	SOFT_SPIKE(true);
 	/**
 	 * The property to know if this action produces
 	 * a point in favor or con
