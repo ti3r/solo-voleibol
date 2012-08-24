@@ -69,7 +69,10 @@ public class VoleiActionPickerFragment extends Fragment
 	 * The button that activated the BAD_SPIKE VoleiAction
 	 */
 	private Button btnBadSpike;
-	
+	/**
+	 * The button that activate the SOFT_SPIKE VoleiAction
+	 */
+	private Button btnSoftSpike;
 	/**
 	 * The button at the border of the fragment to hide and
 	 * show the fragment
@@ -121,6 +124,8 @@ public class VoleiActionPickerFragment extends Fragment
 		btnBadSpike.setOnClickListener(this);
 		btnUndo = (ImageButton) view.findViewById(R.id.volei_action_picker_btn_undo);
 		btnUndo.setOnClickListener(this);
+		btnSoftSpike = (Button) view.findViewById(R.id.volei_action_picker_btn_soft_spike);
+		btnSoftSpike.setOnClickListener(this);
 	}
 
 
