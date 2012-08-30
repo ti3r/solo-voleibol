@@ -32,7 +32,6 @@ import org.blanco.solovolei.PreferenceActivity;
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Set;
 import org.blanco.solovolei.fragments.game.CourtView.CourtActionsListener;
-import org.blanco.solovolei.misc.ScoreChangedRunnable;
 import org.blanco.solovolei.misc.VoleiAction;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
@@ -130,8 +129,6 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 			numberofSetsPerGame = PreferenceManager.getDefaultSharedPreferences(activity)
 					.getInt(PreferenceActivity.PREF_SETS_BY_MATCH, 2);
 		}
-		//Set the runnable for score changes
-		scoreChangedRunnable = new ScoreChangedRunnable(listener);
 	}
 
 	
@@ -207,22 +204,15 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 			}
 		}
 	}
-	ScoreChangedRunnable scoreChangedRunnable =  null;
 	
 	@Override
 	public void onScoreChanged(VoleiAction action, int teamScore, int foeScore) {
-		Handler mHandler = new Handler();
-		scoreChangedRunnable.setAction(action);
-		scoreChangedRunnable.setScore(teamScore, foeScore);
-		
-		mHandler.post(scoreChangedRunnable);
-		
-		//if (listener != null){
-		//	//Communicate the action to the rest of the world
-		//	listener.onScoreChanged(action, teamScore, foeScore);
-		//}else{
-		//	Toast.makeText(getActivity(), teamScore+" - "+foeScore, Toast.LENGTH_LONG).show();
-		//}
+		if (listener != null){
+			//Communicate the action to the rest of the world
+			listener.onScoreChanged(action, teamScore, foeScore);
+		}else{
+			Toast.makeText(getActivity(), teamScore+" - "+foeScore, Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	//end of methods that are needed to implement from the CourtActionsListener
@@ -244,15 +234,15 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 		} else {
 			foeSets ++;
 		}
-//		if (sets == numberofSetsPerGame || foeSets == numberofSetsPerGame){
-//			//Game Ended Deactivate the view.
-//			view.setActivated(false);
-//			view.invalidate();
-//			if (listener != null){
-//				Log.d(TAG, "Communucating the end of the game to the rest of the world");
-//				listener.onGameEnded(sets,foeSets);
-//			}
-//		}
+		if (sets == numberofSetsPerGame || foeSets == numberofSetsPerGame){
+			//Game Ended Deactivate the view.
+			view.setActivated(false);
+			view.invalidate();
+			if (listener != null){
+				Log.d(TAG, "Communucating the end of the game to the rest of the world");
+				listener.onGameEnded(sets,foeSets);
+			}
+		}
 	}
 
 	/**
