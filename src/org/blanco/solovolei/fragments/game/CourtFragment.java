@@ -37,6 +37,7 @@ import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -185,6 +186,23 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 			Log.e(TAG, "CourtFragment - Error onSetEnded - saveSet()",e);
 		}
 		handleSets(teamScore, foeScore);
+		//Check if end of the match.
+		checkIfEndOfMatch();
+	}
+	
+	/**
+	 * Check if the match has ended and tells the listener 
+	 */
+	private void checkIfEndOfMatch(){
+		if (sets == numberofSetsPerGame || foeSets == numberofSetsPerGame){
+			//Game Ended Deactivate the view.
+			view.setActivated(false);
+			view.invalidate();
+			if (listener != null){
+				Log.d(TAG, "Communucating the end of the game to the rest of the world");
+				listener.onGameEnded(sets,foeSets);
+			}
+		}
 	}
 	
 	@Override
@@ -275,5 +293,16 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 		 * The method that will communicate when the game is over 
 		 */
 		public void onGameEnded(int teamSets, int foeSets);
+		/**
+		 * Return true if some other task is being executed in this listener
+		 * so two actions don't overlap each other. For example onSetEnded and
+		 * onGameEnded can occur together at the end of the last set. This 
+		 * method should be used to check this kind of conditions on the
+		 * implementing class
+		 * 
+		 * @return True if some other call back is being executed at this time
+		 * false otherwise.
+		 */
+		public boolean isExecutingTaks();
 	}
 }

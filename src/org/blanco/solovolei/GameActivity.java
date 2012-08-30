@@ -68,9 +68,6 @@ public class GameActivity extends FragmentActivity
 		
 	}
 	
-
-
-
 	@Override
 	public void onAttachFragment(Fragment fragment) {
 		switch (fragment.getId()) {
@@ -130,11 +127,13 @@ public class GameActivity extends FragmentActivity
 	//Implementation of the CourtFragment OnScoreChangedListener
 	@Override
 	public void onScoreChanged(VoleiAction action, int teamScore, int foeScore) {
+		isExecutingScoreTask = true;
 		if (action.isPointToFavor()){
 			scoreFragment.setHome(teamScore);
 		}else{
 			scoreFragment.setVisit(foeScore);
 		}
+		isExecutingScoreTask = false;
 	}
 
 	@Override
@@ -179,6 +178,14 @@ public class GameActivity extends FragmentActivity
 //				GameActivity.this.finish();
 //			}
 //		}, 1000);
+	}
+
+	private boolean isExecutingScoreTask = false;
+	
+	@Override
+	public boolean isExecutingTaks() {
+		// TODO Auto-generated method stub
+		return isExecutingScoreTask;
 	}
 	
 	//End of Implementation of the CourtFragment OnScoreChangedListener

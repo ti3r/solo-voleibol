@@ -253,6 +253,7 @@ public class CourtView extends RelativeLayout implements OnTouchListener {
 						enemyScoreboard);
 			}
 		}
+		
 	}
 	
 	/**
