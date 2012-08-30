@@ -113,11 +113,14 @@ public class GameActivity extends FragmentActivity
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						courtFragment.reviewActions();
+						//TODO set isExecuting to false when review actions is ended.
 					}
 				}, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						//Do Nothing
+						//Do Nothing, only communicate that task is not executing 
+						//anymore on the listener
+						isExecutingScoreTask = false;
 						dialog.dismiss();
 					}
 				});
@@ -138,6 +141,7 @@ public class GameActivity extends FragmentActivity
 
 	@Override
 	public void onSetEnded(final int teamScore, final int foeScore) {
+		isExecutingScoreTask = true;
 		//Set the final score
 		scoreFragment.setHome(teamScore);
 		scoreFragment.setVisit(foeScore);
@@ -186,6 +190,10 @@ public class GameActivity extends FragmentActivity
 	public boolean isExecutingTaks() {
 		// TODO Auto-generated method stub
 		return isExecutingScoreTask;
+	}
+	
+	public void setExecutingTask(boolean executing){
+		isExecutingScoreTask = executing;
 	}
 	
 	//End of Implementation of the CourtFragment OnScoreChangedListener
