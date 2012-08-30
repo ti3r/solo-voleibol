@@ -23,6 +23,8 @@
  */
 package org.blanco.solovolei.fragments.game;
 
+import static org.blanco.solovolei.MainActivity.TAG;
+
 import java.sql.SQLException;
 import java.util.Stack;
 
@@ -30,23 +32,22 @@ import org.blanco.solovolei.PreferenceActivity;
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Set;
 import org.blanco.solovolei.fragments.game.CourtView.CourtActionsListener;
-import org.blanco.solovolei.misc.DialogUtils;
+import org.blanco.solovolei.misc.ScoreChangedRunnable;
 import org.blanco.solovolei.misc.VoleiAction;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.util.Property;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
-import static org.blanco.solovolei.MainActivity.TAG;
 /**
  * The fragment in charge of displaying the court and handle the options 
  * that are executed using gestures and icons present above the court.
@@ -129,6 +130,8 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 			numberofSetsPerGame = PreferenceManager.getDefaultSharedPreferences(activity)
 					.getInt(PreferenceActivity.PREF_SETS_BY_MATCH, 2);
 		}
+		//Set the runnable for score changes
+		scoreChangedRunnable = new ScoreChangedRunnable(listener);
 	}
 
 	
@@ -186,16 +189,40 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 			Log.e(TAG, "CourtFragment - Error onSetEnded - saveSet()",e);
 		}
 		handleSets(teamScore, foeScore);
+		//Check if end of the match.
+		checkIfEndOfMatch();
 	}
+	
+	/**
+	 * Check if the match has ended and tells the listener 
+	 */
+	private void checkIfEndOfMatch(){
+		if (sets == numberofSetsPerGame || foeSets == numberofSetsPerGame){
+			//Game Ended Deactivate the view.
+			view.setActivated(false);
+			view.invalidate();
+			if (listener != null){
+				Log.d(TAG, "Communucating the end of the game to the rest of the world");
+				listener.onGameEnded(sets,foeSets);
+			}
+		}
+	}
+	ScoreChangedRunnable scoreChangedRunnable =  null;
 	
 	@Override
 	public void onScoreChanged(VoleiAction action, int teamScore, int foeScore) {
-		if (listener != null){
-			//Communicate the action to the rest of the world
-			listener.onScoreChanged(action, teamScore, foeScore);
-		}else{
-			Toast.makeText(getActivity(), teamScore+" - "+foeScore, Toast.LENGTH_LONG).show();
-		}
+		Handler mHandler = new Handler();
+		scoreChangedRunnable.setAction(action);
+		scoreChangedRunnable.setScore(teamScore, foeScore);
+		
+		mHandler.post(scoreChangedRunnable);
+		
+		//if (listener != null){
+		//	//Communicate the action to the rest of the world
+		//	listener.onScoreChanged(action, teamScore, foeScore);
+		//}else{
+		//	Toast.makeText(getActivity(), teamScore+" - "+foeScore, Toast.LENGTH_LONG).show();
+		//}
 	}
 	
 	//end of methods that are needed to implement from the CourtActionsListener
@@ -217,15 +244,15 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 		} else {
 			foeSets ++;
 		}
-		if (sets == numberofSetsPerGame || foeSets == numberofSetsPerGame){
-			//Game Ended Deactivate the view.
-			view.setActivated(false);
-			view.invalidate();
-			if (listener != null){
-				Log.d(TAG, "Communucating the end of the game to the rest of the world");
-				listener.onGameEnded(sets,foeSets);
-			}
-		}
+//		if (sets == numberofSetsPerGame || foeSets == numberofSetsPerGame){
+//			//Game Ended Deactivate the view.
+//			view.setActivated(false);
+//			view.invalidate();
+//			if (listener != null){
+//				Log.d(TAG, "Communucating the end of the game to the rest of the world");
+//				listener.onGameEnded(sets,foeSets);
+//			}
+//		}
 	}
 
 	/**
@@ -276,5 +303,16 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 		 * The method that will communicate when the game is over 
 		 */
 		public void onGameEnded(int teamSets, int foeSets);
+		/**
+		 * Return true if some other task is being executed in this listener
+		 * so two actions don't overlap each other. For example onSetEnded and
+		 * onGameEnded can occur together at the end of the last set. This 
+		 * method should be used to check this kind of conditions on the
+		 * implementing class
+		 * 
+		 * @return True if some other call back is being executed at this time
+		 * false otherwise.
+		 */
+		public boolean isExecutingTaks();
 	}
 }

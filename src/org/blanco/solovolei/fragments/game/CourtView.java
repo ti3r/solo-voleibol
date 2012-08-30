@@ -25,13 +25,11 @@ package org.blanco.solovolei.fragments.game;
 
 import static org.blanco.solovolei.MainActivity.TAG;
 
-import java.lang.Character.UnicodeBlock;
 import java.util.Stack;
 
 import org.blanco.solovolei.PreferenceActivity;
 import org.blanco.solovolei.misc.VoleiAction;
 
-import android.R;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -53,7 +51,7 @@ import android.widget.RelativeLayout;
  * CourtActionsListener listener;
  * 
  * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
- * 
+ *
  */
 public class CourtView extends RelativeLayout implements OnTouchListener {
 
@@ -67,10 +65,10 @@ public class CourtView extends RelativeLayout implements OnTouchListener {
 	private CourtActionsListener listener = null;
 	Stack<ActionTaken> actionsStack = new Stack<CourtView.ActionTaken>();
 	private boolean activated = true;
-
+	
 	private int goodPointColor = Color.GREEN;
 	private int badPointColor = Color.RED;
-
+	
 	private boolean reviewMode = false;
 	private Runnable autoInvalidateRunnable = null;
 	
@@ -81,10 +79,10 @@ public class CourtView extends RelativeLayout implements OnTouchListener {
 		super(context, attrs);
 		setBackgroundColor(Color.WHITE);
 		setOnTouchListener(this);
-		// The default action is spike. Volei standards says you
-		// should start receiving the ball and make a spike.
+		//The default action is spike. Volei standards says you
+		//should start receiving the ball and make a spike.
 		action = VoleiAction.SPIKE;
-		// Parse the colors of the actions from the properties
+		//Parse the colors of the actions from the properties
 		String bColor = PreferenceManager.getDefaultSharedPreferences(context)
 				.getString(PreferenceActivity.PREF_COURT_BAD_ACTION_COLOR_KEY,
 						"#FF0000");
@@ -96,9 +94,9 @@ public class CourtView extends RelativeLayout implements OnTouchListener {
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setColor((action.isPointToFavor()) ? goodPointColor
 				: badPointColor);
-		// Set the Stroke Width
+		//Set the Stroke Width
 		paint.setStrokeWidth(3.5f);
-		// set the background of the court
+		//set the background of the court
 		this.setBackgroundResource(org.blanco.solovolei.R.drawable.court);
 		// Start the autoinvalidate runnable to be called when review actions is
 		// activated
@@ -106,37 +104,48 @@ public class CourtView extends RelativeLayout implements OnTouchListener {
 			@Override
 			public void run() {
 				invalidate();
-			}
+	}
 		};
 	}
-
+	
 	/**
 	 * Sets the current action that has happened on the court
 	 * 
 	 * @param action
 	 *            The VoleiAction to relate to the court
 	 */
-	public void setAction(VoleiAction action) {
+	public void setAction(VoleiAction action){
 		this.action = action;
-		// update paint color
+		//update paint color
 		paint.setColor((action.isPointToFavor()) ? goodPointColor
 				: badPointColor);
 	}
-
+	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		if (activated) {
+		if (activated){
 			Point p = new Point();
-			if (event.getAction() == MotionEvent.ACTION_UP) {
-				p.set((int) event.getX(), (int) event.getY());
-				points[(points[0] == null) ? 0 : 1] = p;
+			if (event.getAction() == MotionEvent.ACTION_UP){
+				p.set((int)event.getX(), (int)event.getY());
+				points[(points[0] == null)?0:1] = p;
 				v.invalidate();
 			}
 			return true;
-		} else
+		}else
 			return false;
 	}
 
+	/**
+	 * Draw the actions contained in the Stack<ActionTaken> actions
+	 * until the int untilActionIndx index is reached on the passed 
+	 * Canvas canvas. This is done for reviewing the actions.
+	 *  
+	 * @param actions the Stack<ActionTaken> actions where to obtain 
+	 * the actions to review
+	 * @param untilActionIndx the int index where to stop drawing the
+	 * actions
+	 * @param canvas The Canvas where to draw the actions to
+	 */
 	private void drawReviewActions(Stack<ActionTaken> actions,
 			int untilActionIndx, Canvas canvas) {
 		for (int j = 0; (j < untilActionIndx - 1 && j < actions.size()); j++) {
@@ -154,6 +163,12 @@ public class CourtView extends RelativeLayout implements OnTouchListener {
 		}
 	}
 
+	/**
+	 * Draw the existing point(s) in the Point[] points property
+	 * of this view in the passed Canvas. This is done for 
+	 * drawing the user interactions with the view.
+	 * @param canvas The Canvas where to draw the point(s) to
+	 */
 	private void drawUserPoints(Canvas canvas) {
 		// Draw the points
 		if (points[0] != null && points[1] != null) {
@@ -200,7 +215,8 @@ public class CourtView extends RelativeLayout implements OnTouchListener {
 			drawUserPoints(canvas);
 		}
 	}
-
+	
+	
 	/**
 	 * It handles the score of the current match based on the passed
 	 * ActionTaken.
@@ -209,36 +225,36 @@ public class CourtView extends RelativeLayout implements OnTouchListener {
 	 *            The ActionTaken object that represents the last action taken
 	 *            in the match
 	 */
-	private void handleScore(ActionTaken action) {
+	private void handleScore(ActionTaken action){
 		// Two points have been draw, check the action taken and increment the
 		// board
-		if (action != null && action.voleiAction.isPointToFavor()) {
+		if(action != null && action.voleiAction.isPointToFavor()){
 			scoreboard++;
-		} else if (this.action != null) {
+		}else if (this.action != null){
 			enemyScoreboard++;
 		}
-
-		// finish the game, if the scoreboard is complete
+		//Communicate the change of score to the rest of the world
+		if (listener != null){
+			listener.onScoreChanged(action.voleiAction, scoreboard,
+					enemyScoreboard);
+		}
+		
+		//finish the set, if the score board is complete
 		if ((Math.abs(scoreboard - enemyScoreboard) >= 2) && (scoreboard >= 25)
 				|| (enemyScoreboard >= 25)) {
 			if (listener != null)
 				listener.onSetEnded(scoreboard, enemyScoreboard, actionsStack);
 			else
 				Log.w(TAG, "Set ended but not listener is defined");
-			// clear the action stack
+			//clear the action stack
 			actionsStack = new Stack<CourtView.ActionTaken>();
-			// reset the board
+			//reset the board
 			scoreboard = 0;
 			enemyScoreboard = 0;
-		} else {
-			// Communicate the change of score to the rest of the world
-			if (listener != null) {
-				listener.onScoreChanged(action.voleiAction, scoreboard,
-						enemyScoreboard);
-			}
 		}
+		
 	}
-
+	
 	/**
 	 * Returns the CourtActionsListener object associated with this view
 	 * 
@@ -247,17 +263,17 @@ public class CourtView extends RelativeLayout implements OnTouchListener {
 	public CourtActionsListener getCourtActionsListener() {
 		return listener;
 	}
-
-	public void reviewActions(Stack<CourtView.ActionTaken> actions) {
+	
+	public void reviewActions(Stack<CourtView.ActionTaken> actions){
 		reviewMode = true;
-		// set the current actions stack to the passed actions
-		// Start the tag of the object in 0
-		// So the drawing starts from the beginning (0)
-		setTag(org.blanco.solovolei.R.string.court_view_index_tag, 0);
-		setTag(org.blanco.solovolei.R.string.court_view_actions_tag, actions);
+		//set the current actions stack to the passed actions
+		//Start the tag of the object in 0
+		//So the drawing starts from the beginning (0) 
+		setTag(org.blanco.solovolei.R.string.court_view_index_tag,0);
+		setTag(org.blanco.solovolei.R.string.court_view_actions_tag,actions);
 		invalidate();
 	}
-
+	
 	/**
 	 * Sets the CourtActionsListener associated with the view. This object will
 	 * be used to communicate the actions that occur in the view to the exterior
@@ -274,88 +290,88 @@ public class CourtView extends RelativeLayout implements OnTouchListener {
 	 * it cancels the current action in the court, it invalidates the points
 	 * that have been drawn so far
 	 */
-	public void cancelCurrentAction() {
-		if (points[0] != null) {
-			// TODO sanitize this
-			invalidate(new Rect((int) (points[0].x - paint.getStrokeWidth()),
-					(int) (points[0].y - paint.getStrokeWidth()),
-					(int) (points[0].x + paint.getStrokeWidth()),
-					(int) (points[0].y + paint.getStrokeWidth())));
-			points[0] = null;
+	public void cancelCurrentAction(){
+		if (points[0] != null){
+			//TODO sanitize this
+			invalidate(new Rect((int)(points[0].x-paint.getStrokeWidth()),
+					(int)(points[0].y-paint.getStrokeWidth()),
+					(int)(points[0].x+paint.getStrokeWidth()),
+					(int)(points[0].y+paint.getStrokeWidth())));
+			points[0] = null; 
 		}
-		if (points[1] != null) {
-			// This should never happen but just in case
-			invalidate(new Rect((int) (points[1].x - paint.getStrokeWidth()),
-					(int) (points[1].y - paint.getStrokeWidth()),
-					(int) (points[1].x + paint.getStrokeWidth()),
-					(int) (points[1].y + paint.getStrokeWidth())));
+		if (points[1] != null){
+			//This should never happen but just in case
+			invalidate(new Rect((int)(points[1].x-paint.getStrokeWidth()),
+					(int)(points[1].y-paint.getStrokeWidth()),
+					(int)(points[1].x+paint.getStrokeWidth()),
+					(int)(points[1].y+paint.getStrokeWidth())));
 			points[1] = null;
 		}
 	}
-
+	
 	/**
 	 * reverts the last action that has been registered in the court. It pops
 	 * the last action from the stack of actions.
 	 */
-	public void revertLastAction() {
-		if (actionsStack.isEmpty()) {
+	public void revertLastAction(){
+		if (actionsStack.isEmpty()){
 			Log.w(TAG,
 					"revertAction has been selected but ActionsStack is empty."
 							+ " Event will be ignored");
 		} else {
 			ActionTaken action = actionsStack.pop();
-			if (action.voleiAction.isPointToFavor()) {
-				scoreboard--;
-			} else {
-				enemyScoreboard--;
+			if (action.voleiAction.isPointToFavor()){
+				scoreboard --;
+			}else {
+				enemyScoreboard --;
 			}
-			// invalidate the part of the action if it's still present
+			//invalidate the part of the action if it's still present
 			invalidate(new Rect(
 					(int) (action.point.x - paint.getStrokeWidth()),
-					(int) (action.point.y - paint.getStrokeWidth()),
-					(int) (action.point.x + paint.getStrokeWidth()),
-					(int) (action.point.y + paint.getStrokeWidth())));
-			// Propagate the score change to the world
+					(int)(action.point.y-paint.getStrokeWidth()),
+					(int)(action.point.x+paint.getStrokeWidth()),
+					(int)(action.point.y+paint.getStrokeWidth())));
+			//Propagate the score change to the world
 			listener.onScoreChanged(action.voleiAction, scoreboard,
 					enemyScoreboard);
 		}
 	}
-
+	
 	/**
 	 * Sets the activated property of the view in order to know if user can
 	 * interact with the view.
 	 */
-	public void setActivated(boolean activated) {
+	public void setActivated(boolean activated){
 		this.activated = activated;
 	}
-
+	
 	/***
 	 * Class that represents one action in the volleyball court, this related
 	 * One VoleiAction object with the points (coordinates) where it occurred.
 	 * 
 	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
 	 */
-	public class ActionTaken {
-
-		public ActionTaken(VoleiAction action, Point p1, Point p2) {
+	public class ActionTaken{
+		
+		public ActionTaken(VoleiAction action, Point p1, Point p2){
 			this.voleiAction = action;
 			this.point = p1;
 			this.point2 = p2;
 		}
-
+		
 		public VoleiAction voleiAction = null;
 		public Point point = null;
 		public Point point2 = null;
 	}
-
+	
 	/**
 	 * The interface that will communicate the events that occur within the
 	 * court such as game ended.
 	 * 
 	 * @author Alexandro Blanco <ti3r.bubblenet@gmail.com>
-	 * 
+	 *
 	 */
-	interface CourtActionsListener {
+	 interface CourtActionsListener{
 		/**
 		 * Event that will be triggered when the set is Over
 		 * 
