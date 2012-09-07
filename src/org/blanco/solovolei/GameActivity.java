@@ -39,6 +39,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 public class GameActivity extends FragmentActivity 
 	implements VoleiActionListener, CourtFragment.OnScoreChangedListener{
@@ -165,14 +166,21 @@ public class GameActivity extends FragmentActivity
 
 	@Override
 	public void onGameEnded(int teamSets, int foeSets) {
-		this.finish();
-//		String text = null;
-//		if (teamSets > foeSets){
-//			text = String.format("Congrats you won %i to %i", teamSets,foeSets);
-//		}else{
-//			text = String.format("To bad. You lose %i to %i", teamSets,foeSets);
-//		}
-//		Toast.makeText(getBaseContext(), text, Toast.LENGTH_LONG).show();
+		//this.finish();
+		String text = null;
+		if (teamSets > foeSets){
+			text = String.format("Congrats you won %d to %d", teamSets,foeSets);
+		}else{
+			text = String.format("To bad. You lose %d to %d", teamSets,foeSets);
+		}
+		
+		DialogUtils.createAlertDialog(this, text,new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				GameActivity.this.finish();
+			}
+		}).show();
 //		
 //		Handler handler = new Handler();
 //		handler.postDelayed(new Runnable() {
@@ -182,6 +190,7 @@ public class GameActivity extends FragmentActivity
 //				GameActivity.this.finish();
 //			}
 //		}, 1000);
+		
 	}
 
 	private boolean isExecutingScoreTask = false;

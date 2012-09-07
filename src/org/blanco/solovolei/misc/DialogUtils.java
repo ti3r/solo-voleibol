@@ -50,18 +50,13 @@ public class DialogUtils {
 		return dialog.create();
 	}
 	
-	public static Dialog createAlertDialog(Context ctx){
+	public static Dialog createAlertDialog(Context ctx, CharSequence msg,
+			OnClickListener onOk){
 		Builder dialog = new AlertDialog.Builder(ctx);
 		dialog.setTitle(ctx.getString(R.string.solo_volei));
-		dialog.setMessage("Felicidades Ganaste");
+		dialog.setMessage(msg);
 		dialog.setIcon(R.drawable.ic_launcher);
-		dialog.setPositiveButton("OK", new OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-			}
-		});
+		dialog.setPositiveButton(ctx.getText(R.string.accept), onOk);
 		return dialog.create();
 	}
 	

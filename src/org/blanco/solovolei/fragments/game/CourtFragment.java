@@ -246,7 +246,8 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 	
 	@Override
 	public void onActionsReviewEnded() {
-		
+		if (listener != null)
+			listener.setExecutingTask(false);
 	}
 	
 	//end of methods that are needed to implement from the CourtActionsListener
