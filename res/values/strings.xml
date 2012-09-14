@@ -45,4 +45,6 @@
     <string name="set_review_actions_ques">Do you want to review the actions of this set?</string>
     <string name="pref_app_language_category_title">Language</string>
     <string name="pref_language_title">Language</string>
+    <string name="ace_serve">Ace Serve</string>
+    <string name="bad_serve">Bad Serve</string>
 </resources>

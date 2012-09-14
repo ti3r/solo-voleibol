@@ -53,7 +53,21 @@ public enum VoleiAction {
 	 * out or it does not crosses the net so it is a
 	 * bad point.
 	 */
-	BAD_SPIKE(false);
+	BAD_SPIKE(false),
+	
+	/**
+	 * The player on position one server the ball  
+	 * and the opposite team can't pass the ball or
+	 * the first hit goes unreachable.
+	 */
+	ACE_SERVE(true),
+	
+	/**
+	 * The player on position one server the ball  
+	 * and it does not reach the opposite side or
+	 * it goes out of the court.
+	 */
+	BAD_SERVE(false);
 	
 	/**
 	 * The property to know if this action produces

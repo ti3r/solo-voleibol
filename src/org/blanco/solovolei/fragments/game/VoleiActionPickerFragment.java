@@ -69,6 +69,15 @@ public class VoleiActionPickerFragment extends Fragment
 	 * The button that activated the BAD_SPIKE VoleiAction
 	 */
 	private Button btnBadSpike;
+	/**
+	 * The button that activated the ACE_SERVE VoleiAction
+	 */
+	private Button btnAceServe;
+	/**
+	 * The button that activated the BAD_SERVE VoleiAction
+	 */
+	private Button btnBadServe;
+	
 	
 	/**
 	 * The button at the border of the fragment to hide and
@@ -119,8 +128,14 @@ public class VoleiActionPickerFragment extends Fragment
 		btnShowHide.setOnClickListener(this);
 		btnBadSpike = (Button) view.findViewById(R.id.volei_action_picker_layout_btn_bad_spike);
 		btnBadSpike.setOnClickListener(this);
+		btnAceServe = (Button) view.findViewById(R.id.volei_action_picker_layout_btn_bad_spike);
+		btnAceServe.setOnClickListener(this);
+		btnBadServe = (Button) view.findViewById(R.id.volei_action_picker_layout_btn_bad_spike);
+		btnBadServe.setOnClickListener(this);
+		
 		btnUndo = (ImageButton) view.findViewById(R.id.volei_action_picker_btn_undo);
 		btnUndo.setOnClickListener(this);
+		
 	}
 
 
@@ -156,6 +171,13 @@ public class VoleiActionPickerFragment extends Fragment
 					break;
 				case R.id.volei_action_picker_layout_btn_bad_spike:
 					actionPicked(VoleiAction.BAD_SPIKE);
+					break;
+				case R.id.volei_action_picker_layout_btn_ace_serve:
+					actionPicked(VoleiAction.ACE_SERVE);
+					break;
+				case R.id.volei_action_picker_layout_btn_bad_serve:
+					actionPicked(VoleiAction.BAD_SERVE);
+					break;
 				case R.id.volei_action_picker_btn_show_hide:
 					//execute show and hide logic
 					showHide();

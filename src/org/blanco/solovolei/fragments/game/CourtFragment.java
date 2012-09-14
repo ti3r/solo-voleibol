@@ -217,8 +217,8 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 				Bundle msgData = new Bundle();
 				msgData.putInt(MSG_ID_ACTION_COURT_SCORE_CHANGED_EVT_KEY, 
 						MSG_ID_ACTION_COURT_MATCH_ENDED_VAL);
-				msgData.putInt(MSG_ID_ACTION_COURT_SET_ENDED_TSCORE_VAL, sets);
-				msgData.putInt(MSG_ID_ACTION_COURT_SET_ENDED_FSCORE_VAL, foeSets);
+				msgData.putInt(MSG_ID_ACTION_COURT_MATCH_ENDED_TSETS_VAL, sets);
+				msgData.putInt(MSG_ID_ACTION_COURT_MATCH_ENDED_FSETS_VAL, foeSets);
 				matchEndedMsg.setData(msgData);
 				courtActionsHandler.sendMessage(matchEndedMsg);
 			}
