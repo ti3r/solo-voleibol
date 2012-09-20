@@ -6,25 +6,26 @@
     android:layout_width="wrap_content"
     android:gravity="center_horizontal"
     android:layout_centerHorizontal="true"
-    android:background="#123456"
     android:id="@+id/volei_action_picker_lyt_buttons_container">
     
-<Button
+<ImageButton
     android:id="@+id/volei_action_picker_btn_spike"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
     android:layout_alignParentTop="true"
     android:layout_marginLeft="23dp"
-    android:text="@string/spike" />
+    android:src="@drawable/spike"
+    android:contentDescription="@string/spike" />
 
-<Button
+<ImageButton
     android:id="@+id/volei_action_picker_btn_block"
+    android:src="@drawable/block"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:layout_toRightOf="@+id/volei_action_picker_btn_spike"
-    android:text="@string/block" />
+    android:contentDescription="@string/block" />
 
 <Button
     android:id="@+id/volei_action_picker_btn_bad_block"

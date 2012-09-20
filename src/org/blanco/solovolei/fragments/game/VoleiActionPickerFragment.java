@@ -56,11 +56,11 @@ public class VoleiActionPickerFragment extends Fragment
 	/**
 	 * The button that activates the SPIKE VoleiAction
 	 */
-	private Button btnSpike;
+	private ImageButton btnSpike;
 	/**
 	 * The button that activates the BLOCK VoleiAction
 	 */
-	private Button btnBlock;
+	private ImageButton btnBlock;
 	/**
 	 * The button that activates the BAD_BLOCK VoleiAction
 	 */
@@ -109,9 +109,9 @@ public class VoleiActionPickerFragment extends Fragment
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		lytButtonsContainer = (RelativeLayout) view.
 				findViewById(R.id.volei_action_picker_lyt_buttons_container);
-		btnSpike = (Button) view.findViewById(R.id.volei_action_picker_btn_spike);
+		btnSpike = (ImageButton) view.findViewById(R.id.volei_action_picker_btn_spike);
 		btnSpike.setOnClickListener(this);
-		btnBlock = (Button) view.findViewById(R.id.volei_action_picker_btn_block);
+		btnBlock = (ImageButton) view.findViewById(R.id.volei_action_picker_btn_block);
 		btnBlock.setOnClickListener(this);
 		btnBadBlock = (Button) view.findViewById(R.id.volei_action_picker_btn_bad_block);
 		btnBadBlock.setOnClickListener(this);
