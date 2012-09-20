@@ -43,10 +43,26 @@
     android:layout_toRightOf="@+id/volei_action_picker_btn_bad_block"
     android:text="@string/bad_spike" />
 
+<Button
+    android:id="@+id/volei_action_picker_layout_btn_ace_serve"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_toRightOf="@+id/volei_action_picker_layout_btn_bad_spike"
+    android:text="@string/ace_serve" />
+
+<Button
+    android:id="@+id/volei_action_picker_layout_btn_bad_serve"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_toRightOf="@+id/volei_action_picker_layout_btn_ace_serve"
+    android:text="@string/bad_serve" />
+
 <ImageButton android:id="@+id/volei_action_picker_btn_undo"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_toRightOf="@id/volei_action_picker_layout_btn_bad_spike"
+    android:layout_toRightOf="@id/volei_action_picker_layout_btn_bad_serve"
     android:src="@android:drawable/ic_menu_revert"
     android:contentDescription="@string/undo" />
 

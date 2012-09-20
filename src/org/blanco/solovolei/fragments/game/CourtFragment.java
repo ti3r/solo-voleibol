@@ -32,12 +32,13 @@ import org.blanco.solovolei.PreferenceActivity;
 import org.blanco.solovolei.R;
 import org.blanco.solovolei.entities.Set;
 import org.blanco.solovolei.fragments.game.CourtView.CourtActionsListener;
+import org.blanco.solovolei.misc.CourtActionsHandler;
 import org.blanco.solovolei.misc.VoleiAction;
 import org.blanco.solovolei.providers.dao.DaoFactory;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -59,6 +60,19 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 	 * The key name to store the number of sets per game for this fragment
 	 */
 	private static final String NUMBER_OF_SETS_PER_GAME_BUNDLE_KEY = "sett_sets_per_game_key";
+	public static final String MSG_ID_ACTION_COURT_SCORE_CHANGED_EVT_KEY = "msg_id_action_court_score_changed_event_key";
+	
+	public static final int MSG_ID_ACTION_COURT_SCORE_CHANGED_VAL = 0;
+	public static final int MSG_ID_ACTION_COURT_SET_ENDED_VAL = 1;
+	public static final int MSG_ID_ACTION_COURT_MATCH_ENDED_VAL = 2;
+	
+	public static final String MSG_ID_ACTION_COURT_SCORE_CHANGED_ACTION = "msg_id_action_cout_score_changed_bndl_value_action";
+	public static final String MSG_ID_ACTION_COURT_SCORE_CHANGED_TSCORE = "msg_id_action_cout_score_changed_bndl_value_team_score";
+	public static final String MSG_ID_ACTION_COURT_SCORE_CHANGED_FSCORE = "msg_id_action_cout_score_changed_bndl_value_foe_score";
+	public static final String MSG_ID_ACTION_COURT_SET_ENDED_TSCORE_VAL = "msg_id_action_cout_set_ended_bndl_value_team_score";
+	public static final String MSG_ID_ACTION_COURT_SET_ENDED_FSCORE_VAL = "msg_id_action_cout_set_ended_bndl_value_foe_score";
+	public static final String MSG_ID_ACTION_COURT_MATCH_ENDED_TSETS_VAL = "msg_id_action_cout_match_ended_bndl_value_team_sets";
+	public static final String MSG_ID_ACTION_COURT_MATCH_ENDED_FSETS_VAL = "msg_id_action_cout_match_ended_bndl_value_foe_sets";
 	/**
 	 * The CourtView that will be inflated within the fragment in order
 	 * to let the user register the actions that occurred in the game
@@ -86,6 +100,8 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 	private Stack<CourtView.ActionTaken> actionsStack = null; 
 	
 	private int numberofSetsPerGame = -1;//Default value
+	
+	CourtActionsHandler courtActionsHandler = null;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -129,13 +145,7 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 			numberofSetsPerGame = PreferenceManager.getDefaultSharedPreferences(activity)
 					.getInt(PreferenceActivity.PREF_SETS_BY_MATCH, 2);
 		}
-	}
-
-	
-	@Override
-	public void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
+		courtActionsHandler = new CourtActionsHandler(listener);
 	}
 
 	/**
@@ -180,12 +190,14 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 	
 	@Override
 	public void onSetEnded(int teamScore, int foeScore, Stack<CourtView.ActionTaken> actions) {
+		handleSets(teamScore, foeScore);
+		
 		try {
 			saveSet(teamScore, foeScore, actions);
 		} catch (SQLException e) {
 			Log.e(TAG, "CourtFragment - Error onSetEnded - saveSet()",e);
 		}
-		handleSets(teamScore, foeScore);
+		
 		//Check if end of the match.
 		checkIfEndOfMatch();
 	}
@@ -200,7 +212,15 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 			view.invalidate();
 			if (listener != null){
 				Log.d(TAG, "Communucating the end of the game to the rest of the world");
-				listener.onGameEnded(sets,foeSets);
+				//listener.onGameEnded(sets,foeSets);
+				Message matchEndedMsg = new Message();
+				Bundle msgData = new Bundle();
+				msgData.putInt(MSG_ID_ACTION_COURT_SCORE_CHANGED_EVT_KEY, 
+						MSG_ID_ACTION_COURT_MATCH_ENDED_VAL);
+				msgData.putInt(MSG_ID_ACTION_COURT_MATCH_ENDED_TSETS_VAL, sets);
+				msgData.putInt(MSG_ID_ACTION_COURT_MATCH_ENDED_FSETS_VAL, foeSets);
+				matchEndedMsg.setData(msgData);
+				courtActionsHandler.sendMessage(matchEndedMsg);
 			}
 		}
 	}
@@ -208,11 +228,26 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 	@Override
 	public void onScoreChanged(VoleiAction action, int teamScore, int foeScore) {
 		if (listener != null){
+			Message msg = new Message();
+			Bundle msgData = new Bundle();
+			msgData.putInt(MSG_ID_ACTION_COURT_SCORE_CHANGED_EVT_KEY, 
+					MSG_ID_ACTION_COURT_SCORE_CHANGED_VAL);
+			msgData.putString(MSG_ID_ACTION_COURT_SCORE_CHANGED_ACTION,action.toString());
+			msgData.putInt(MSG_ID_ACTION_COURT_SCORE_CHANGED_TSCORE,teamScore);
+			msgData.putInt(MSG_ID_ACTION_COURT_SCORE_CHANGED_FSCORE,foeScore);
 			//Communicate the action to the rest of the world
-			listener.onScoreChanged(action, teamScore, foeScore);
+			//listener.onScoreChanged(action, teamScore, foeScore);
+			msg.setData(msgData);
+			courtActionsHandler.sendMessage(msg);
 		}else{
 			Toast.makeText(getActivity(), teamScore+" - "+foeScore, Toast.LENGTH_LONG).show();
 		}
+	}
+	
+	@Override
+	public void onActionsReviewEnded() {
+		if (listener != null)
+			listener.setExecutingTask(false);
 	}
 	
 	//end of methods that are needed to implement from the CourtActionsListener
@@ -226,22 +261,21 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 	private void handleSets(int teamScore, int foeScore) {
 		//Communicate the end of the set to the rest of the world
 		if (listener != null){
-			listener.onSetEnded(teamScore, foeScore);
+			Message setEndMessage = new Message();
+			Bundle msgData = new Bundle();
+			msgData.putInt(MSG_ID_ACTION_COURT_SCORE_CHANGED_EVT_KEY, 
+					MSG_ID_ACTION_COURT_SET_ENDED_VAL);
+			msgData.putInt(MSG_ID_ACTION_COURT_SET_ENDED_TSCORE_VAL, teamScore);
+			msgData.putInt(MSG_ID_ACTION_COURT_SET_ENDED_FSCORE_VAL, foeScore);
+			setEndMessage.setData(msgData);
+			courtActionsHandler.sendMessage(setEndMessage);
+			//listener.onSetEnded(teamScore, foeScore);
 		}
 		//Handle the sets count internally.
 		if (teamScore > foeScore){
 			sets++;
 		} else {
 			foeSets ++;
-		}
-		if (sets == numberofSetsPerGame || foeSets == numberofSetsPerGame){
-			//Game Ended Deactivate the view.
-			view.setActivated(false);
-			view.invalidate();
-			if (listener != null){
-				Log.d(TAG, "Communucating the end of the game to the rest of the world");
-				listener.onGameEnded(sets,foeSets);
-			}
 		}
 	}
 
@@ -304,5 +338,14 @@ public class CourtFragment extends Fragment implements CourtActionsListener{
 		 * false otherwise.
 		 */
 		public boolean isExecutingTaks();
+		/**
+		 * Sets the value to view if the listener is executing tasks, this is used
+		 * to communicate task ends between the listener and the
+		 * events dispatcher.
+		 * @param executing boolean value to communicate is the listener
+		 * is executing tasks.
+		 */
+		public void setExecutingTask(boolean executing);
 	}
+
 }
