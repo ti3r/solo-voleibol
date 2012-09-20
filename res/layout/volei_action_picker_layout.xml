@@ -43,13 +43,14 @@
     android:layout_toRightOf="@+id/volei_action_picker_btn_bad_block"
     android:text="@string/bad_spike" />
 
-<Button
+<ImageButton
     android:id="@+id/volei_action_picker_layout_btn_ace_serve"
+    android:src="@drawable/serve"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:layout_toRightOf="@+id/volei_action_picker_layout_btn_bad_spike"
-    android:text="@string/ace_serve" />
+    android:contentDescription="@string/ace_serve" />
 
 <Button
     android:id="@+id/volei_action_picker_layout_btn_bad_serve"

@@ -6,9 +6,20 @@ import org.blanco.solovolei.fragments.game.CourtFragment.OnScoreChangedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
+/**
+ * Handler to manage the Court Events synchronously. 
+ * The end of game should ocur when all the tasks of
+ * end of set etc.  
+ * Note: This is not the best approach other solution 
+ * should be implemented 
+ * @author alex
+ *
+ */
 public class CourtActionsHandler extends Handler {
 
+	/**
+	 * The score listener that will receive the sync court events
+	 */
 	OnScoreChangedListener listener = null;
 	
 	public CourtActionsHandler(OnScoreChangedListener listener) {
@@ -17,7 +28,12 @@ public class CourtActionsHandler extends Handler {
 	}
 
 	
-	
+	/**
+	 * One message has arrive to this handler. depending
+	 * on the data the corresponding listener method will be 
+	 * invoked.
+	 * @param msg The Message that has arrive to the handler
+	 */
 	@Override
 	public void handleMessage(Message msg) {
 		Bundle b = msg.getData();
@@ -37,6 +53,14 @@ public class CourtActionsHandler extends Handler {
 		}
 	}
 	
+	/**
+	 * Handle the changes on the score, retrieves the score from 
+	 * the message and executes the listener method if the listener
+	 * is not busy executing other task. If it is; the message
+	 * is re send for future handling 
+	 * @param message The Message containing the information for the
+	 * score change
+	 */
 	private void handleScoreChange(Message message){
 		Bundle bundle = message.getData();
 		//Retrieve the data
@@ -54,6 +78,14 @@ public class CourtActionsHandler extends Handler {
 		}
 	}
 	
+	/**
+	 * Handle the score ending events, retrieves the final score from 
+	 * the message and executes the listener method if the listener
+	 * is not busy executing other task. If it is; the message
+	 * is re send for future handling 
+	 * @param message The Message containing the information for the
+	 * set end
+	 */
 	private void handleSetEnd(Message message){
 		Bundle bundle = message.getData();
 		int teamScore = bundle.getInt(CourtFragment.MSG_ID_ACTION_COURT_SET_ENDED_TSCORE_VAL);
@@ -68,7 +100,14 @@ public class CourtActionsHandler extends Handler {
 		}
 	}
 	
-	
+	/**
+	 * Handle the end of the match, retrieves the final sets count from 
+	 * the message and executes the listener method if the listener
+	 * is not busy executing other task. If it is, the message
+	 * is re send for future handling 
+	 * @param message The Message containing the information for the
+	 * match end.
+	 */
 	private void handleMatchEnd(Message message){
 		Bundle bundle = message.getData();
 		int teamSets = bundle.getInt(CourtFragment.MSG_ID_ACTION_COURT_MATCH_ENDED_TSETS_VAL);
